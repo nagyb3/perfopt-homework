@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cryptography Library Benchmark — Node vs Java</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --panel: #f9fafb;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.45;
+    }
+    .wrap {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    header {
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+    }
+    .note {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--muted);
+    }
+    .chart-card {
+      margin: 22px 0 34px;
+      padding: 16px 16px 8px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .chart-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+    }
+    .chart-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 360px;
+    }
+    canvas {
+      display: block;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .mini {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .mini strong { display: block; margin-bottom: 4px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+  </style>
+
+  <!-- Chart.js and datalabels plugin (CDN). This keeps the document to a single .html file. -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Cryptography Library Benchmark — Node vs Java</h1>
+      <p class="subtitle">All values are shown as <strong>milliseconds per operation</strong> (lower is better). Java JMH values were converted from ns/op, Node values use latency.mean, and both are displayed in ms for readability.</p>
+      <div class="note">
+        Each bar is labeled directly so you can read every value without hovering. The x-axis is logarithmic because the RSA measurements span several orders of magnitude.
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="mini"><strong>Java source</strong><span class="mono">bouncycastle-benchmark/results.json</span></div>
+      <div class="mini"><strong>Node source</strong><span class="mono">node-benchmarks/results/*.json</span></div>
+      <div class="mini"><strong>Units</strong><span class="mono">milliseconds / op</span></div>
+    </section>
+
+    <section class="chart-card">
+      <h2>SHA-256</h2>
+        <p>Java has one benchmark entry for SHA-256; Node has one latency measurement.</p>
+      <div class="chart-container">
+        <canvas id="chart-sha256"></canvas>
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <h2>ChaCha20</h2>
+      <p>Encrypt and decrypt are shown side-by-side for both runtimes.</p>
+      <div class="chart-container">
+        <canvas id="chart-chacha20"></canvas>
+      </div>
+    </section>
+
+    <section class="chart-card">
+      <h2>RSA</h2>
+        <p>RSA spans the widest range, so the log scale makes smaller Java bars visible next to the much slower Node decrypt bar.</p>
+      <div class="chart-container">
+        <canvas id="chart-rsa"></canvas>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const REPORT_DATA = {
+      "sha256": {
+        "labels": ["sha256"],
+        "java": [0.0000041290848683909435],
+        "node": [0.0008766595536521196]
+      },
+      "chacha20": {
+        "labels": ["encrypt", "decrypt"],
+        "java": [0.0000021507988788188677, 0.000002184923349555056],
+        "node": [0.002437171895208156, 0.002303220682306091]
+      },
+      "rsa": {
+        "labels": ["encrypt", "decrypt"],
+        "java": [0.000032443092015131297, 0.000714448592793119],
+        "node": [0.014391803868516401, 0.40367547229693346]
+      }
+    };
+
+    const COLORS = {
+      java: 'rgba(31, 119, 180, 0.85)',
+      node: 'rgba(255, 127, 14, 0.85)'
+    };
+
+    function formatSeconds(value) {
+      if (value === null || value === undefined || Number.isNaN(value)) return 'N/A';
+      const abs = Math.abs(value);
+      if (abs >= 1000) return `${(value / 1000).toFixed(3)} s`;
+      if (abs >= 1) return `${value.toFixed(3)} ms`;
+      if (abs >= 0.001) return `${(value * 1000).toFixed(3)} µs`;
+      return `${(value * 1000000).toFixed(3)} ns`;
+    }
+
+    function chartOptions(title) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        interaction: { mode: 'nearest', axis: 'y', intersect: false },
+        hover: { mode: 'nearest', axis: 'y', intersect: false },
+        layout: {
+          padding: { top: 8, right: 56, bottom: 8, left: 8 }
+        },
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: false, text: title },
+          datalabels: {
+            anchor: 'end',
+            align: 'left',
+            offset: 4,
+            clamp: true,
+            clip: false,
+            color: '#111827',
+            font: { size: 10, weight: '700' },
+            formatter(value) {
+              return value === null || value === undefined ? '' : formatSeconds(Number(value));
+            }
+          }
+        },
+        scales: {
+          y: { grid: { display: false } },
+          x: {
+            type: 'logarithmic',
+            title: { display: true, text: 'milliseconds / op (log scale)' },
+            beginAtZero: false,
+            ticks: {
+              autoSkip: true,
+              maxTicksLimit: 6,
+              sampleSize: 6,
+              major: { enabled: true },
+              callback(value) {
+                return formatSeconds(Number(value));
+              }
+            },
+            grid: { color: 'rgba(229, 231, 235, 0.8)' }
+          }
+        }
+      };
+    }
+
+    function makeChart(canvasId, category) {
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      const labels = REPORT_DATA[category].labels;
+      const javaData = REPORT_DATA[category].java.map(v => v === null ? null : Number(v) * 1000);
+      const nodeData = REPORT_DATA[category].node.map(v => v === null ? null : Number(v) * 1000);
+      const allValues = javaData.concat(nodeData).filter(v => v !== null && Number.isFinite(v));
+      const maxValue = allValues.length ? Math.max(...allValues) : 1;
+
+      return new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Java',
+              data: javaData,
+              backgroundColor: COLORS.java,
+              borderColor: 'rgba(31, 119, 180, 1)',
+              borderWidth: 1
+            },
+            {
+              label: 'Node',
+              data: nodeData,
+              backgroundColor: COLORS.node,
+              borderColor: 'rgba(255, 127, 14, 1)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: (() => {
+          const opts = chartOptions(category);
+          opts.scales.x.suggestedMax = Math.max(1, maxValue * 1.25);
+          return opts;
+        })(),
+        plugins: [ChartDataLabels]
+      });
+    }
+
+    Chart.register(ChartDataLabels);
+    makeChart('chart-sha256', 'sha256');
+    makeChart('chart-chacha20', 'chacha20');
+    makeChart('chart-rsa', 'rsa');
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
