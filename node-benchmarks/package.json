@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bench:rsa": "npx tsx RsaBenchmark.ts",
+    "bench:chacha": "npx tsx ChaCha20Benchmark.ts",
+    "bench:sha256": "npx tsx Sha256Benchmark.ts",
+    "bench:all": "npm run bench:rsa && npm run bench:chacha && npm run bench:sha256"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +20,6 @@
     "typescript": "^6.0.2"
   },
   "dependencies": {
-    "mitata": "^1.0.34"
+    "tinybench": "^6.0.1"
   }
 }

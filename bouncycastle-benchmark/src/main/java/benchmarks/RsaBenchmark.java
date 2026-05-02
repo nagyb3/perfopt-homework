@@ -10,15 +10,14 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 10, time = 1)
-@Fork(3)
+@Warmup(iterations = 5)
+@Measurement(iterations = 10)
 public class RsaBenchmark {
 
 	private static final int KEY_SIZE = 2048;
-	private static final int PLAINTEXT_SIZE = 32;
+	private static final int DATA_SIZE = 32;
 	private static final String ALGORITHM = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding";
 
 	private byte[] plaintext;
@@ -38,8 +37,9 @@ public class RsaBenchmark {
 		encryptCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic(), new SecureRandom());
 		decryptCipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate(), new SecureRandom());
 
-		plaintext = new byte[PLAINTEXT_SIZE];
+		plaintext = new byte[DATA_SIZE];
 		new SecureRandom().nextBytes(plaintext);
+
 		ciphertext = encryptCipher.doFinal(plaintext);
 
 		byte[] roundTrip = decryptCipher.doFinal(ciphertext);

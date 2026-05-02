@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-05-02T18:09:59.693Z",
+  "benchmark": {
+    "name": "node:crypto SHA-256 benchmark",
+    "runtime": "node",
+    "runtimeVersion": "22.18.0",
+    "iterations": 64,
+    "warmup": true,
+    "warmupIterations": 10,
+    "warmupTime": 250,
+    "time": 750,
+    "timestampProvider": "hrtimeNow"
+  },
+  "verification": {
+    "digestMatches": true
+  },
+  "tasks": [
+    {
+      "name": "sha256",
+      "runs": 855521,
+      "state": "completed",
+      "period": 0.0008766595536446068,
+      "totalTime": 750.0006579935877,
+      "latency": {
+        "mean": 0.0008766595536521196,
+        "min": 0.000666,
+        "max": 2.716334,
+        "aad": 0.0001733310762552303,
+        "critical": 1.96,
+        "df": 855520,
+        "mad": 0.00004100000000000002,
+        "moe": 0.00002624922749078371,
+        "p50": 0.000791,
+        "p75": 0.000792,
+        "p99": 0.001125,
+        "p995": 0.001208,
+        "p999": 0.001959,
+        "rme": 2.9942327533454405,
+        "samplesCount": 855521,
+        "sd": 0.012387275383614197,
+        "sem": 0.000013392463005501894,
+        "variance": 0.00015344459142949428
+      },
+      "throughput": {
+        "mean": 1258121.884887764,
+        "min": 368.1432401170107,
+        "max": 1501501.5015015015,
+        "aad": 64641.880906684346,
+        "critical": 1.96,
+        "df": 855520,
+        "mad": 69110.83017277694,
+        "moe": 214.61119245783036,
+        "p50": 1264222.5031605563,
+        "p75": 1333333.3333333333,
+        "p99": 1412429.3785310735,
+        "p995": 1412429.3785310735,
+        "p999": 1412429.3785310735,
+        "rme": 0.017058060513507056,
+        "samplesCount": 855521,
+        "sd": 101277.18776921609,
+        "sem": 109.4955063560359,
+        "variance": 10257068762.441053
+      },
+      "runtime": "node",
+      "runtimeVersion": "22.18.0",
+      "timestampProviderName": "hrtimeNow"
+    }
+  ],
+  "sha256": {
+    "algorithm": "sha256",
+    "dataSize": 1024
+  }
+}
