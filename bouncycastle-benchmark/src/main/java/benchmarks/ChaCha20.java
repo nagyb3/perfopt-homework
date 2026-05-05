@@ -12,12 +12,12 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-@Warmup(iterations = 5)
+@Warmup(iterations = 20)
 @Measurement(iterations = 10)
 public class ChaCha20 {
 
     private static final int DATA_SIZE = 1024;
-    private static final String ALGORITHM = "ChaCha7539";
+    private static final String ALGORITHM = "ChaCha20-Poly1305";
 
     private byte[] plaintext;
     private byte[] ciphertext;
@@ -35,7 +35,7 @@ public class ChaCha20 {
         secureRandom.nextBytes(key);
         secureRandom.nextBytes(nonce);
 
-        SecretKeySpec keySpec = new SecretKeySpec(key, ALGORITHM);
+        SecretKeySpec keySpec = new SecretKeySpec(key, "ChaCha20");
         IvParameterSpec ivSpec = new IvParameterSpec(nonce);
 
         encryptCipher = Cipher.getInstance(ALGORITHM, "BC");

@@ -7,7 +7,12 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(benchmark REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-add_executable(openssl_cpp_benchmark main.cpp)
+add_executable(openssl_cpp_benchmark
+        main.cpp
+        chacha20_benchmark.cpp
+        rsa_benchmark.cpp
+        sha256_benchmark.cpp
+)
 
-target_link_libraries(openssl_cpp_benchmark benchmark::benchmark)
-target_link_libraries(openssl_cpp_benchmark OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(openssl_cpp_benchmark benchmark::benchmark OpenSSL::Crypto)
+

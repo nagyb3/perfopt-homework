@@ -1,0 +1,174 @@
+#include <benchmark/benchmark.h>
+
+#include <openssl/evp.h>
+
+#include <array>
+#include <cstddef>
+#include <cstring>
+#include <random>
+#include <stdexcept>
+
+namespace {
+
+constexpr std::size_t DATA_SIZE = 1024;
+constexpr std::size_t KEY_SIZE = 32;
+constexpr std::size_t NONCE_SIZE = 12;
+constexpr std::size_t IV_SIZE = NONCE_SIZE;
+constexpr std::size_t TAG_SIZE = 16;
+
+template <std::size_t N>
+void FillRandomBytes(std::array<unsigned char, N>& buffer) {
+	std::random_device device;
+	std::mt19937_64 rng(device());
+	std::uniform_int_distribution dist(0, 255);
+
+	for (auto& byte : buffer) {
+		byte = static_cast<unsigned char>(dist(rng));
+	}
+}
+
+bool ProcessEncrypt(EVP_CIPHER_CTX* ctx,
+					const std::array<unsigned char, KEY_SIZE>& key,
+					const std::array<unsigned char, IV_SIZE>& iv,
+					const std::array<unsigned char, DATA_SIZE>& input,
+					std::array<unsigned char, DATA_SIZE>& output,
+					std::array<unsigned char, TAG_SIZE>& tag) {
+	int outlen = 0;
+	int finallen = 0;
+
+	if (EVP_EncryptInit_ex(ctx, EVP_chacha20_poly1305(), nullptr, nullptr, nullptr) != 1) return false;
+	if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, IV_SIZE, nullptr) != 1) return false;
+	if (EVP_EncryptInit_ex(ctx, nullptr, nullptr, key.data(), iv.data()) != 1) return false;
+
+	if (EVP_EncryptUpdate(ctx, output.data(), &outlen, input.data(), input.size()) != 1) return false;
+	if (EVP_EncryptFinal_ex(ctx, output.data() + outlen, &finallen) != 1) return false;
+	if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_GET_TAG, TAG_SIZE, tag.data()) != 1) return false;
+
+	return outlen + finallen == static_cast<int>(output.size());
+}
+
+bool ProcessDecrypt(EVP_CIPHER_CTX* ctx,
+					const std::array<unsigned char, KEY_SIZE>& key,
+					const std::array<unsigned char, IV_SIZE>& iv,
+					const std::array<unsigned char, DATA_SIZE>& input,
+					std::array<unsigned char, DATA_SIZE>& output,
+					const std::array<unsigned char, TAG_SIZE>& tag) {
+	int outlen = 0;
+	int finallen = 0;
+
+	if (EVP_DecryptInit_ex(ctx, EVP_chacha20_poly1305(), nullptr, nullptr, nullptr) != 1) return false;
+	if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_IVLEN, IV_SIZE, nullptr) != 1) return false;
+	if (EVP_DecryptInit_ex(ctx, nullptr, nullptr, key.data(), iv.data()) != 1) return false;
+
+	if (EVP_DecryptUpdate(ctx, output.data(), &outlen, input.data(), input.size()) != 1) return false;
+	if (EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_AEAD_SET_TAG, TAG_SIZE, const_cast<unsigned char*>(tag.data())) != 1) return false;
+	if (EVP_DecryptFinal_ex(ctx, output.data() + outlen, &finallen) != 1) return false;
+
+	return outlen + finallen == static_cast<int>(output.size());
+}
+
+class ChaCha20Benchmark : public benchmark::Fixture {
+protected:
+	std::array<unsigned char, KEY_SIZE> key_{};
+	std::array<unsigned char, NONCE_SIZE> nonce_{};
+	std::array<unsigned char, IV_SIZE> iv_{};
+	std::array<unsigned char, DATA_SIZE> plaintext_{};
+	std::array<unsigned char, DATA_SIZE> ciphertext_{};
+	std::array<unsigned char, TAG_SIZE> tag_{};
+
+	void SetUp(const ::benchmark::State&) override {
+		FillRandomBytes(key_);
+		FillRandomBytes(nonce_);
+		FillRandomBytes(plaintext_);
+
+		std::memcpy(iv_.data(), nonce_.data(), NONCE_SIZE);
+
+		EVP_CIPHER_CTX* encrypt_ctx = EVP_CIPHER_CTX_new();
+		EVP_CIPHER_CTX* decrypt_ctx = EVP_CIPHER_CTX_new();
+		if (encrypt_ctx == nullptr || decrypt_ctx == nullptr) {
+			if (encrypt_ctx != nullptr) {
+				EVP_CIPHER_CTX_free(encrypt_ctx);
+			}
+			if (decrypt_ctx != nullptr) {
+				EVP_CIPHER_CTX_free(decrypt_ctx);
+			}
+			throw std::runtime_error("Failed to allocate OpenSSL cipher context");
+		}
+
+		std::array<unsigned char, DATA_SIZE> round_trip{};
+
+		if (!ProcessEncrypt(encrypt_ctx, key_, iv_, plaintext_, ciphertext_, tag_)) {
+			EVP_CIPHER_CTX_free(encrypt_ctx);
+			EVP_CIPHER_CTX_free(decrypt_ctx);
+			throw std::runtime_error("ChaCha20 setup encryption failed");
+		}
+		if (!ProcessDecrypt(decrypt_ctx, key_, iv_, ciphertext_, round_trip, tag_)) {
+			EVP_CIPHER_CTX_free(encrypt_ctx);
+			EVP_CIPHER_CTX_free(decrypt_ctx);
+			throw std::runtime_error("ChaCha20 setup decryption failed");
+		}
+
+		if (round_trip != plaintext_) {
+			EVP_CIPHER_CTX_free(encrypt_ctx);
+			EVP_CIPHER_CTX_free(decrypt_ctx);
+			throw std::runtime_error("ChaCha20 setup verification failed");
+		}
+
+		EVP_CIPHER_CTX_free(encrypt_ctx);
+		EVP_CIPHER_CTX_free(decrypt_ctx);
+	}
+};
+
+BENCHMARK_DEFINE_F(ChaCha20Benchmark, Encrypt)(benchmark::State& state) {
+	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+	if (ctx == nullptr) {
+		state.SkipWithError("Failed to allocate OpenSSL cipher context");
+		return;
+	}
+
+	std::array<unsigned char, DATA_SIZE> output{};
+	std::array<unsigned char, TAG_SIZE> tag{};
+
+	for (auto _ : state) {
+		if (!ProcessEncrypt(ctx, key_, iv_, plaintext_, output, tag)) {
+			state.SkipWithError("ChaCha20 encryption failed");
+			break;
+		}
+
+		benchmark::DoNotOptimize(output.data());
+		benchmark::ClobberMemory();
+	}
+
+	state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(DATA_SIZE));
+	EVP_CIPHER_CTX_free(ctx);
+}
+
+BENCHMARK_DEFINE_F(ChaCha20Benchmark, Decrypt)(benchmark::State& state) {
+	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+	if (ctx == nullptr) {
+		state.SkipWithError("Failed to allocate OpenSSL cipher context");
+		return;
+	}
+
+	std::array<unsigned char, DATA_SIZE> output{};
+
+	for ([[maybe_unused]] auto _ : state) {
+		if (!ProcessDecrypt(ctx, key_, iv_, ciphertext_, output, tag_)) {
+			state.SkipWithError("ChaCha20 decryption failed");
+			break;
+		}
+
+		benchmark::DoNotOptimize(output.data());
+		benchmark::ClobberMemory();
+	}
+
+	state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(DATA_SIZE));
+	EVP_CIPHER_CTX_free(ctx);
+}
+
+BENCHMARK_REGISTER_F(ChaCha20Benchmark, Encrypt);
+BENCHMARK_REGISTER_F(ChaCha20Benchmark, Decrypt);
+
+}  // namespace
+
+

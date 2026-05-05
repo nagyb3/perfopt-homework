@@ -5,7 +5,7 @@ import { parseOutputPath, writeJsonReport, createBaseReport, type TaskResultJson
 
 const DATA_SIZE = 1024;
 const ALGORITHM = "sha256";
-const DEFAULT_OUTPUT_FILE = resolve(process.cwd(), "results", "sha256-report.json");
+const OUTPUT_FILE = resolve(process.cwd(), "results", "sha256-report.json");
 
 type BenchmarkReport = {
   generatedAt: string;
@@ -24,9 +24,6 @@ type BenchmarkReport = {
     algorithm: string;
     dataSize: number;
   };
-  verification: {
-    digestMatches: boolean;
-  };
   tasks: TaskResultJson[];
 };
 
@@ -34,40 +31,15 @@ function digest(data: Buffer): Buffer {
   return createHash(ALGORITHM).update(data).digest();
 }
 
-function createBenchmarkReport(bench: Bench, digestMatches: boolean): BenchmarkReport {
-  return {
-    generatedAt: new Date().toISOString(),
-    benchmark: {
-      name: bench.name,
-      runtime: bench.runtime,
-      runtimeVersion: bench.runtimeVersion,
-      iterations: bench.iterations,
-      warmup: bench.warmup,
-      warmupIterations: bench.warmupIterations,
-      warmupTime: bench.warmupTime,
-      time: bench.time,
-      timestampProvider: bench.timestampProvider.name,
-    },
-    sha256: {
-      algorithm: ALGORITHM,
-      dataSize: DATA_SIZE,
-    },
-    verification: {
-      digestMatches,
-    },
-    tasks: bench.tasks.map((task) => serializeTaskResult({ name: task.name, runs: task.runs, result: task.result })),
-  };
-}
-
 async function main() {
-  const outputFile = parseOutputPath(process.argv.slice(2), DEFAULT_OUTPUT_FILE);
+  const outputFile = parseOutputPath(process.argv.slice(2), OUTPUT_FILE);
   const bench = new Bench({
     name: "node:crypto SHA-256 benchmark",
-    time: Number(process.env.BENCH_TIME_MS ?? 750),
+    time: Infinity,
     warmup: true,
-    warmupTime: Number(process.env.BENCH_WARMUP_MS ?? 250),
-    warmupIterations: 10,
-    iterations: 64,
+    warmupTime: Infinity,
+    warmupIterations: 20,
+    iterations: 10,
     retainSamples: false,
     timestampProvider: "hrtimeNow",
   });
@@ -87,14 +59,7 @@ async function main() {
   await bench.run();
 
   const report = createBaseReport(
-    bench,
-    {
-      sha256: {
-        algorithm: ALGORITHM,
-        dataSize: DATA_SIZE,
-      },
-    },
-    { digestMatches: true },
+    bench
   ) as BenchmarkReport;
   await writeJsonReport(outputFile, report);
 

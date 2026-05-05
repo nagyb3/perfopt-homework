@@ -2,3 +2,4 @@
 .ipynb_checkpoints
 report_files
 report.html
+chacha-naive-cpp/cmake-build-debug

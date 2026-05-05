@@ -23,17 +23,6 @@ type BenchmarkReport = {
     time: number;
     timestampProvider: string;
   };
-  chacha20: {
-    algorithm: string;
-    keySize: number;
-    nonceSize: number;
-    dataSize: number;
-    authTagSize: number;
-    aadSize: number;
-  };
-  verification: {
-    roundTripMatches: boolean;
-  };
   tasks: TaskResultJson[];
 };
 
@@ -53,11 +42,11 @@ async function main() {
   const outputFile = parseOutputPath(process.argv.slice(2), DEFAULT_OUTPUT_FILE);
   const bench = new Bench({
     name: "node:crypto ChaCha20-Poly1305 benchmark",
-    time: Number(process.env.BENCH_TIME_MS ?? 750),
+    time: Infinity,
     warmup: true,
-    warmupTime: Number(process.env.BENCH_WARMUP_MS ?? 250),
-    warmupIterations: 10,
-    iterations: 64,
+    warmupTime: Infinity,
+    warmupIterations: 20,
+    iterations: 10,
     retainSamples: false,
     timestampProvider: "hrtimeNow",
   });
@@ -84,17 +73,6 @@ async function main() {
 
   const report = createBaseReport(
     bench,
-    {
-      chacha20: {
-        algorithm: ALGORITHM,
-        keySize: KEY_SIZE,
-        nonceSize: NONCE_SIZE,
-        dataSize: DATA_SIZE,
-        authTagSize: AUTH_TAG_SIZE,
-        aadSize: 0,
-      },
-    },
-    { roundTripMatches: true },
   ) as BenchmarkReport;
   await writeJsonReport(outputFile, report);
 

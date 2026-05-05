@@ -168,24 +168,19 @@ export function createBenchmarkMetadata(bench: Bench): BenchmarkMetadata {
   };
 }
 
-export type BaseBenchmarkReport<AlgoMetadata extends Record<string, unknown>> = {
+export type BaseBenchmarkReport = {
   generatedAt: string;
   benchmark: BenchmarkMetadata;
-  verification: Record<string, unknown>;
   tasks: TaskResultJson[];
-} & AlgoMetadata;
+};
 
-export function createBaseReport<AlgoMetadata extends Record<string, unknown>>(
+export function createBaseReport(
   bench: Bench,
-  algoMetadata: AlgoMetadata,
-  verification: Record<string, unknown>,
-): BaseBenchmarkReport<AlgoMetadata> {
+): BaseBenchmarkReport {
   return {
     generatedAt: new Date().toISOString(),
     benchmark: createBenchmarkMetadata(bench),
-    verification,
     tasks: bench.tasks.map((task) => serializeTaskResult({ name: task.name, runs: task.runs, result: task.result })),
-    ...algoMetadata,
   };
 }
 

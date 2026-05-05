@@ -5,7 +5,6 @@ import { parseOutputPath, writeJsonReport, createBaseReport, type TaskResultJson
 
 const KEY_SIZE = 2048;
 const DATA_SIZE = 32;
-const ALGORITHM = "RSA-OAEP-SHA256";
 const DEFAULT_OUTPUT_FILE = resolve(process.cwd(), "results", "rsa-benchmark-results.json");
 
 type BenchmarkReport = {
@@ -38,11 +37,11 @@ async function main() {
   const outputFile = parseOutputPath(process.argv.slice(2), DEFAULT_OUTPUT_FILE);
   const bench = new Bench({
     name: "node:crypto RSA OAEP benchmark",
-    time: Number(process.env.BENCH_TIME_MS ?? 750),
+    time: Infinity,
     warmup: true,
-    warmupTime: Number(process.env.BENCH_WARMUP_MS ?? 250),
-    warmupIterations: 10,
-    iterations: 64,
+    warmupTime: Infinity,
+    warmupIterations: 20,
+    iterations: 10,
     retainSamples: false,
     timestampProvider: "hrtimeNow",
   });
@@ -99,17 +98,7 @@ async function main() {
   await bench.run();
 
   const report = createBaseReport(
-    bench,
-    {
-      rsa: {
-        keySize: KEY_SIZE,
-        dataSize: DATA_SIZE,
-        algorithm: ALGORITHM,
-        padding: "RSA_PKCS1_OAEP_PADDING",
-        oaepHash: "sha256",
-      },
-    },
-    { roundTripMatches: true },
+    bench
   ) as BenchmarkReport;
   await writeJsonReport(outputFile, report);
 
