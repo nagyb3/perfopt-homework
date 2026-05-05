@@ -95,16 +95,40 @@
     <div class="wrap">
       <header>
         <h1>Cryptography Library Benchmark</h1>
-        <p class="subtitle">
+        <p>Author: Bence Nagy</p>
+        <!-- <p class="subtitle">
           All values are shown as
-          <strong>milliseconds per operation</strong> (lower is better). Java
-          JMH values were converted from ns/op, Node values use latency.mean,
-          and both are displayed in ms for readability.
-        </p>
-        <p class="runtime-note">
-          <strong>Runtime:</strong> Benchmarks were tested on an M3 MacBook Air.
-        </p>
+          <strong>milliseconds per operation</strong> (lower is better).
+        </p> -->
       </header>
+      <div>
+        <h2>Introduction</h2>
+        <p>
+          This benchmark aims to compare 3 well-know cryptographic libraries:
+          Bouncy Castle (Java), Node's Cpypto modules and OpenSSL (using C++).
+          The cryptographic algorithms I have chosen to test using the given
+          libraries were the following 3 famous algorithms: RSA, SHA-256 and
+          ChaCha20-Poly1305. RSA is an asymmetric cryptographic algorithm that
+          relies on the mathematical difficulty of factoring large prime numbers
+          to provide secure data encryption. SHA-256 is a cryptographic hash
+          function from the SHA-2 family that generates a unique, fixed-size
+          256-bit signature to ensure data integrity and detect unauthorized
+          modifications.
+        </p>
+      </div>
+
+      <div>
+        <h2>Methodology</h2>
+        <p>
+          In the tests I have chosen to take a few notable measures in order to
+          achieve more comparable results.
+        </p>
+      </div>
+
+      <div>
+        <h2>Hardware</h2>
+        <p>The benchmarks were ran on a M3 Macbook Air.</p>
+      </div>
 
       <section class="chart-card">
         <h2>SHA-256</h2>
@@ -114,8 +138,7 @@
       </section>
 
       <section class="chart-card">
-        <h2>ChaCha20</h2>
-        <p>Encrypt and decrypt are shown side-by-side for both runtimes.</p>
+        <h2>ChaCha20-Poly1305</h2>
         <div class="chart-container">
           <canvas id="chart-chacha20"></canvas>
         </div>
@@ -127,6 +150,25 @@
           <canvas id="chart-rsa"></canvas>
         </div>
       </section>
+
+      <div>
+        <h2>Source code</h2>
+        <p>
+          The source code for all of benchmarks and this webpage can be found in
+          the following Github repoistory:
+          <a target="_blank" href="https://github.com/nagyb3/perfopt-homework"
+            >https://github.com/nagyb3/perfopt-homework</a
+          >
+        </p>
+      </div>
+      <div>
+        <h2>AI dislosure</h2>
+        <p>
+          During the creation of the benchmarks I have used Github Copilot for
+          speeding up the coding process but have manually reviewed every change
+          manually in order to make results more accurate.
+        </p>
+      </div>
     </div>
 
     <script>
