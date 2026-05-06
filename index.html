@@ -85,9 +85,13 @@
         display: block;
         margin-bottom: 4px;
       }
+      code {
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: 600;
+      }
     </style>
 
-    <!-- Chart.js and datalabels plugin (CDN). This keeps the document to a single .html file. -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   </head>
@@ -96,39 +100,93 @@
       <header>
         <h1>Cryptography Library Benchmark</h1>
         <p>Author: Bence Nagy</p>
-        <!-- <p class="subtitle">
-          All values are shown as
-          <strong>milliseconds per operation</strong> (lower is better).
-        </p> -->
       </header>
       <div>
         <h2>Introduction</h2>
         <p>
           This benchmark aims to compare 3 well-know cryptographic libraries:
-          Bouncy Castle (Java), Node's Cpypto modules and OpenSSL (using C++).
-          The cryptographic algorithms I have chosen to test using the given
-          libraries were the following 3 famous algorithms: RSA, SHA-256 and
-          ChaCha20-Poly1305. RSA is an asymmetric cryptographic algorithm that
-          relies on the mathematical difficulty of factoring large prime numbers
-          to provide secure data encryption. SHA-256 is a cryptographic hash
-          function from the SHA-2 family that generates a unique, fixed-size
-          256-bit signature to ensure data integrity and detect unauthorized
-          modifications.
+          Bouncy Castle, Node's Crypto module and OpenSSL. The cryptographic
+          algorithms I have chosen to test using the given libraries were the
+          following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305. RSA
+          is an asymmetric cryptographic algorithm that relies on the
+          mathematical difficulty of factoring large prime numbers to provide
+          secure data encryption. SHA-256 is a cryptographic hash function from
+          the SHA-2 family that generates a unique, fixed-size 256-bit signature
+          to ensure data integrity and detect unauthorized modifications.
+        </p>
+        <p></p>
+        <p>
+          The goal of this benchmark isn't to compare the algorithms to each
+          other (for example trying to decide of ChaCha20 or RSA can encrypt a
+          message faster), but rather comparing the libraries to each other and
+          seeing which library can achieve a faster runtime for the chosen
+          algorithms in the given programming language.
         </p>
       </div>
 
       <div>
         <h2>Methodology</h2>
         <p>
-          In the tests I have chosen to take a few notable measures in order to
-          achieve more comparable results.
+          For the encryption algorithms (ChaCha20-Poly1305 and RSA) I both
+          measured the encryption and decryption speed of a message.
         </p>
+        <p>
+          In the tests I have chosen to take a few notable measures in order to
+          achieve more comparable results. During the benchmarks each algorithm
+          and library pair (for example RSA encryption using BouncyCastle) had
+          its speed measured for 10 iterations. The below numbers in the graphs
+          are the statictical mean (average) values of those 10 iterations.
+          Also, in each benchmark I have setup the benchmarking framework to
+          start the process with a warmup period.
+        </p>
+
+        <h3>Benchmarking frameworks</h3>
+        <p>
+          For testing the runtime of each algorithm I have used a third-party
+          benchmark library:
+        </p>
+        <ul>
+          <li>
+            <strong>TypeScript: </strong>
+            <a href="https://github.com/tinylibs/tinybench" target="_blank"
+              >tinybench</a
+            >
+          </li>
+          <li>
+            <strong>Java: </strong>
+            <a href="https://github.com/openjdk/jmh" target="_blank"
+              >Java Microbenchmark Harness</a
+            >
+          </li>
+          <li>
+            <strong>C++: </strong>
+            <a href="https://github.com/google/benchmark" target="_blank"
+              >Google BenchMark</a
+            >
+          </li>
+        </ul>
+
+        <h3>Compilers and language versions:</h3>
+        <ul>
+          <li>
+            <strong>Typescript:</strong> The tests were ran on TypeScript
+            version 6.0.2 using tsx 4.21.0.
+          </li>
+          <li><strong>Java:</strong> TODO</li>
+          <li>
+            <strong>C++: </strong>The C++ source codes were compiled with Clang
+            22.1.2 using <code>-O3</code> optimization. For building the project
+            I have setup a CMake project and used C++20.
+          </li>
+        </ul>
       </div>
 
       <div>
         <h2>Hardware</h2>
         <p>The benchmarks were ran on a M3 Macbook Air.</p>
       </div>
+
+      <h2>Results</h2>
 
       <section class="chart-card">
         <h2>SHA-256</h2>
@@ -155,20 +213,28 @@
         <h2>Source code</h2>
         <p>
           The source code for all of benchmarks and this webpage can be found in
-          the following Github repoistory:
+          the following Github repository:
           <a target="_blank" href="https://github.com/nagyb3/perfopt-homework"
             >https://github.com/nagyb3/perfopt-homework</a
           >
         </p>
       </div>
+
       <div>
         <h2>AI dislosure</h2>
         <p>
           During the creation of the benchmarks I have used Github Copilot for
           speeding up the coding process but have manually reviewed every change
-          manually in order to make results more accurate.
+          in order to make results accurate.
         </p>
       </div>
+
+      <h2>Conclusion</h2>
+      <p>In my measurements I have witness that X and Y. TODO TODO</p>
+      <p>
+        Even though TypeScript is thought of as a much slower programmign
+        language than Java or C+ TODO TODO
+      </p>
     </div>
 
     <script>
@@ -407,14 +473,14 @@
                 borderWidth: 1,
               },
               {
-                label: "Node Crypto",
+                label: "Node Crypto (TypeScript)",
                 data: nodeData,
                 backgroundColor: COLORS.node,
                 borderColor: "rgba(255, 127, 14, 1)",
                 borderWidth: 1,
               },
               {
-                label: "C++ (OpenSSL)",
+                label: "OpenSSL (C++)",
                 data: cppData,
                 backgroundColor: "rgba(75, 192, 192, 0.85)",
                 borderColor: "rgba(75, 192, 192, 1)",

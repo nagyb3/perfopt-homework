@@ -1,6 +1,6 @@
 {
   "context": {
-    "date": "2026-05-05T23:21:51+02:00",
+    "date": "2026-05-06T10:56:13+02:00",
     "host_name": "bences-macbook.local",
     "executable": "./cmake-build-debug/openssl_cpp_benchmark",
     "num_cpus": 8,
@@ -26,7 +26,7 @@
         "num_sharing": 1
       }
     ],
-    "load_avg": [2.29004,3.75586,3.8584],
+    "load_avg": [5.78662,4.99561,4.66309],
     "library_version": "v1.9.5",
     "library_build_type": "release",
     "json_schema_version": 1
@@ -41,11 +41,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6544914460103030e+02,
-      "cpu_time": 8.6535819285830371e+02,
+      "iterations": 813310,
+      "real_time": 8.7143417026642771e+02,
+      "cpu_time": 8.6945445156213464e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1833250189932308e+09
+      "bytes_per_second": 1.1777500226264825e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -56,11 +56,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6553286327905880e+02,
-      "cpu_time": 8.6552686138647982e+02,
+      "iterations": 813310,
+      "real_time": 8.6797623291966522e+02,
+      "cpu_time": 8.6791260405011610e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1830944199232171e+09
+      "bytes_per_second": 1.1798422965878150e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -71,11 +71,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6124351180246629e+02,
-      "cpu_time": 8.6123997222509479e+02,
+      "iterations": 813310,
+      "real_time": 8.6683905890320466e+02,
+      "cpu_time": 8.6670273327513496e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1889833647112308e+09
+      "bytes_per_second": 1.1814892934864335e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -86,11 +86,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.8062454139970635e+02,
-      "cpu_time": 8.7378546348141697e+02,
+      "iterations": 813310,
+      "real_time": 8.6588232040515800e+02,
+      "cpu_time": 8.6584943010660129e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1719123775761666e+09
+      "bytes_per_second": 1.1826536628590581e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -101,11 +101,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.5670998000028101e+02,
-      "cpu_time": 8.5670931394999661e+02,
+      "iterations": 813310,
+      "real_time": 8.6439149893897786e+02,
+      "cpu_time": 8.6413913513912166e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1952712353256469e+09
+      "bytes_per_second": 1.1849943583855181e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -116,11 +116,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6008832814822779e+02,
-      "cpu_time": 8.6007160409925962e+02,
+      "iterations": 813310,
+      "real_time": 8.6895315687492143e+02,
+      "cpu_time": 8.6883353210952748e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1905985444926066e+09
+      "bytes_per_second": 1.1785917119401784e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -131,11 +131,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6466120401552143e+02,
-      "cpu_time": 8.6461580510289991e+02,
+      "iterations": 813310,
+      "real_time": 8.6720771784751889e+02,
+      "cpu_time": 8.6709003946834594e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1843410610312998e+09
+      "bytes_per_second": 1.1809615534597340e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -146,11 +146,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.6524985104431164e+02,
-      "cpu_time": 8.6518459970156812e+02,
+      "iterations": 813310,
+      "real_time": 8.6236818311841455e+02,
+      "cpu_time": 8.6232555852012240e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1835624447698362e+09
+      "bytes_per_second": 1.1874865471427460e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -161,11 +161,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 8.9104916011340470e+02,
-      "cpu_time": 8.7616529023298449e+02,
+      "iterations": 813310,
+      "real_time": 8.6985164577270871e+02,
+      "cpu_time": 8.6829622161291513e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1687292471123848e+09
+      "bytes_per_second": 1.1793210364290833e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt",
@@ -176,11 +176,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 812244,
-      "real_time": 9.2076852398598214e+02,
-      "cpu_time": 8.9122357321199058e+02,
+      "iterations": 813310,
+      "real_time": 8.7060330623768118e+02,
+      "cpu_time": 8.7051062940330303e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1489821754932716e+09
+      "bytes_per_second": 1.1763210757138109e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt_mean",
@@ -193,10 +193,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 8.7313771083899917e+02,
-      "cpu_time": 8.6798806762499953e+02,
+      "real_time": 8.6755072912846776e+02,
+      "cpu_time": 8.6711143352473232e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1798799889428890e+09
+      "bytes_per_second": 1.1809411558630860e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt_median",
@@ -209,10 +209,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 8.6534949782267108e+02,
-      "cpu_time": 8.6527139627993586e+02,
+      "real_time": 8.6759197538359206e+02,
+      "cpu_time": 8.6750132175923113e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1834437318815336e+09
+      "bytes_per_second": 1.1804019250237746e+09
     },
     {
       "name": "ChaCha20Benchmark/Encrypt_stddev",
@@ -225,10 +225,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 1.9658792110267026e+01,
-      "cpu_time": 1.0044281531034008e+01,
+      "real_time": 2.8301679180016639e+00,
+      "cpu_time": 2.4845028607468977e+00,
       "time_unit": "ns",
-      "bytes_per_second": 1.3469341906587387e+07
+      "bytes_per_second": 3.3892769824426500e+06
     },
     {
       "name": "ChaCha20Benchmark/Encrypt_cv",
@@ -241,10 +241,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 2.2515110579036688e-02,
-      "cpu_time": 1.1571911994732030e-02,
+      "real_time": 3.2622506361614382e-03,
+      "cpu_time": 2.8652636382011597e-03,
       "time_unit": "ns",
-      "bytes_per_second": 1.1415857572646194e-02
+      "bytes_per_second": 2.8699795630084640e-03
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -255,11 +255,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.7842467314020200e+02,
-      "cpu_time": 8.7806516627477129e+02,
+      "iterations": 807549,
+      "real_time": 8.7056703927053945e+02,
+      "cpu_time": 8.7052302708566481e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1662004590665674e+09
+      "bytes_per_second": 1.1763043229633398e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -270,11 +270,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.7108274809788702e+02,
-      "cpu_time": 8.7105405004257420e+02,
+      "iterations": 807549,
+      "real_time": 8.7168477330838493e+02,
+      "cpu_time": 8.7158921625808489e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1755872094848194e+09
+      "bytes_per_second": 1.1748653848612843e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -285,11 +285,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.6817115977214769e+02,
-      "cpu_time": 8.6811419851939615e+02,
+      "iterations": 807549,
+      "real_time": 8.7338549489503384e+02,
+      "cpu_time": 8.6962896369136752e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1795683122640700e+09
+      "bytes_per_second": 1.1775136785386775e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -300,11 +300,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 9.6467946764839974e+02,
-      "cpu_time": 9.0272710938903845e+02,
+      "iterations": 807549,
+      "real_time": 8.7054108545475333e+02,
+      "cpu_time": 8.7039919559060809e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1343405879247811e+09
+      "bytes_per_second": 1.1764716755111041e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -315,11 +315,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.8872793223764518e+02,
-      "cpu_time": 8.8659958909781062e+02,
+      "iterations": 807549,
+      "real_time": 8.7050615504860423e+02,
+      "cpu_time": 8.6996950030276628e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1549745934825053e+09
+      "bytes_per_second": 1.1770527583365028e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -330,11 +330,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 9.3243484285349746e+02,
-      "cpu_time": 8.9879645759609105e+02,
+      "iterations": 807549,
+      "real_time": 8.7092738892601108e+02,
+      "cpu_time": 8.7092795607449239e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1393013305134475e+09
+      "bytes_per_second": 1.1757574123759270e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -345,11 +345,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.8140830343664152e+02,
-      "cpu_time": 8.8111177945645591e+02,
+      "iterations": 807549,
+      "real_time": 8.7411481158856679e+02,
+      "cpu_time": 8.7402126682096002e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1621680970281541e+09
+      "bytes_per_second": 1.1715962058046381e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -360,11 +360,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.8521293614187982e+02,
-      "cpu_time": 8.8239682527282901e+02,
+      "iterations": 807549,
+      "real_time": 8.7030688912239032e+02,
+      "cpu_time": 8.7012552798653735e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1604756167197094e+09
+      "bytes_per_second": 1.1768416935996888e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -375,11 +375,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.9683492954791507e+02,
-      "cpu_time": 8.7959237877994849e+02,
+      "iterations": 807549,
+      "real_time": 8.7932816832728702e+02,
+      "cpu_time": 8.7913674588167453e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1641756166877596e+09
+      "bytes_per_second": 1.1647789775560389e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt",
@@ -390,11 +390,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 768066,
-      "real_time": 8.7680805946000066e+02,
-      "cpu_time": 8.7605882827777680e+02,
+      "iterations": 807549,
+      "real_time": 8.7701860816129681e+02,
+      "cpu_time": 8.7686815289227047e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1688712754747958e+09
+      "bytes_per_second": 1.1677924402003064e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt_mean",
@@ -407,10 +407,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 8.9437850523362181e+02,
-      "cpu_time": 8.8245163827066915e+02,
+      "real_time": 8.7283804141028691e+02,
+      "cpu_time": 8.7231895525844266e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1605663098646610e+09
+      "bytes_per_second": 1.1738974549747505e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt_median",
@@ -423,10 +423,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 8.8331061978926061e+02,
-      "cpu_time": 8.8035207911820214e+02,
+      "real_time": 8.7130608111719789e+02,
+      "cpu_time": 8.7072549158007860e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.1631718568579569e+09
+      "bytes_per_second": 1.1760308676696334e+09
     },
     {
       "name": "ChaCha20Benchmark/Decrypt_stddev",
@@ -439,10 +439,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 3.0683816791988839e+01,
-      "cpu_time": 1.1060456526013873e+01,
+      "real_time": 3.1408993171395787e+00,
+      "cpu_time": 3.2833025732683914e+00,
       "time_unit": "ns",
-      "bytes_per_second": 1.4430968955237282e+07
+      "bytes_per_second": 4.3998875176895149e+06
     },
     {
       "name": "ChaCha20Benchmark/Decrypt_cv",
@@ -455,10 +455,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 3.4307417511083724e-02,
-      "cpu_time": 1.2533782075229559e-02,
+      "real_time": 3.5984904050064942e-03,
+      "cpu_time": 3.7638785142478583e-03,
       "time_unit": "ns",
-      "bytes_per_second": 1.2434420017689593e-02
+      "bytes_per_second": 3.7481021012897185e-03
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -469,11 +469,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.3705462954829787e+04,
-      "cpu_time": 1.2286094296188969e+04,
+      "iterations": 59397,
+      "real_time": 1.1756934962967991e+04,
+      "cpu_time": 1.1756772227553511e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6045706005956754e+06
+      "bytes_per_second": 2.7218354987777919e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -484,11 +484,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1920491226917275e+04,
-      "cpu_time": 1.1880688890783491e+04,
+      "iterations": 59397,
+      "real_time": 1.1760063639196742e+04,
+      "cpu_time": 1.1759129248951987e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6934465075357854e+06
+      "bytes_per_second": 2.7212899290865390e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -499,11 +499,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1888166084060278e+04,
-      "cpu_time": 1.1877670730667649e+04,
+      "iterations": 59397,
+      "real_time": 1.1826925181044457e+04,
+      "cpu_time": 1.1823610620064959e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6941309222672204e+06
+      "bytes_per_second": 2.7064490728149666e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -514,11 +514,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1805799727275953e+04,
-      "cpu_time": 1.1803188677636586e+04,
+      "iterations": 59397,
+      "real_time": 1.2053834789867051e+04,
+      "cpu_time": 1.1988265400609476e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.7111317859918787e+06
+      "bytes_per_second": 2.6692769079314126e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -529,11 +529,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1931503828028477e+04,
-      "cpu_time": 1.1872418791030843e+04,
+      "iterations": 59397,
+      "real_time": 1.1880233159647294e+04,
+      "cpu_time": 1.1870144956815957e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6953227108341875e+06
+      "bytes_per_second": 2.6958390244110101e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -544,11 +544,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.2026222746972746e+04,
-      "cpu_time": 1.1938170347003201e+04,
+      "iterations": 59397,
+      "real_time": 1.2097709749423100e+04,
+      "cpu_time": 1.1930299510076273e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6804777507662931e+06
+      "bytes_per_second": 2.6822461559303650e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -559,11 +559,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.2169641487052897e+04,
-      "cpu_time": 1.1885514536618595e+04,
+      "iterations": 59397,
+      "real_time": 1.1887763691622496e+04,
+      "cpu_time": 1.1878680741451646e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6923529394886373e+06
+      "bytes_per_second": 2.6939018478990966e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -574,11 +574,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1861455946761640e+04,
-      "cpu_time": 1.1852485292863892e+04,
+      "iterations": 59397,
+      "real_time": 1.1797403488141515e+04,
+      "cpu_time": 1.1785814098355133e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6998557019316838e+06
+      "bytes_per_second": 2.7151285208601775e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -589,11 +589,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1947136738030127e+04,
-      "cpu_time": 1.1920794611646284e+04,
+      "iterations": 59397,
+      "real_time": 1.1857461942369087e+04,
+      "cpu_time": 1.1845076350657406e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6843848117924030e+06
+      "bytes_per_second": 2.7015444267882649e+06
     },
     {
       "name": "RSABenchmark/Encrypt",
@@ -604,11 +604,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 58645,
-      "real_time": 1.1865092215665964e+04,
-      "cpu_time": 1.1856697075624477e+04,
+      "iterations": 59397,
+      "real_time": 1.1933822415009328e+04,
+      "cpu_time": 1.1916696129434165e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6988966485267649e+06
+      "bytes_per_second": 2.6853080461588847e+06
     },
     {
       "name": "RSABenchmark/Encrypt_mean",
@@ -621,10 +621,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 1.2112097295559513e+04,
-      "cpu_time": 1.1917372325006399e+04,
+      "real_time": 1.1885215301928907e+04,
+      "cpu_time": 1.1855448928397052e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6854570379730538e+06
+      "bytes_per_second": 2.6992819430658510e+06
     },
     {
       "name": "RSABenchmark/Encrypt_median",
@@ -637,10 +637,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 1.1925997527472875e+04,
-      "cpu_time": 1.1879179810725571e+04,
+      "real_time": 1.1868847551008192e+04,
+      "cpu_time": 1.1857610653736683e+04,
       "time_unit": "ns",
-      "bytes_per_second": 2.6937887149015032e+06
+      "bytes_per_second": 2.6986917255996373e+06
     },
     {
       "name": "RSABenchmark/Encrypt_stddev",
@@ -653,10 +653,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.6899860875125046e+02,
-      "cpu_time": 1.3469616417420281e+02,
+      "real_time": 1.1545950480618815e+02,
+      "cpu_time": 7.6546706607460735e+01,
       "time_unit": "ns",
-      "bytes_per_second": 2.9626656380235851e+04
+      "bytes_per_second": 1.7407546312285554e+04
     },
     {
       "name": "RSABenchmark/Encrypt_cv",
@@ -669,10 +669,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 4.6977711197866139e-02,
-      "cpu_time": 1.1302505325907109e-02,
+      "real_time": 9.7145488637004045e-03,
+      "cpu_time": 6.4566687495157078e-03,
       "time_unit": "ns",
-      "bytes_per_second": 1.1032258554617447e-02
+      "bytes_per_second": 6.4489544550926092e-03
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -683,11 +683,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2595582095239410e+05,
-      "cpu_time": 4.2550121802679839e+05,
+      "iterations": 1654,
+      "real_time": 4.2485431801784498e+05,
+      "cpu_time": 4.2470435308343382e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5205425141661079e+04
+      "bytes_per_second": 7.5346531693574492e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -698,11 +698,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2228248112423206e+05,
-      "cpu_time": 4.2225639464068256e+05,
+      "iterations": 1654,
+      "real_time": 4.2591772491335892e+05,
+      "cpu_time": 4.2576058041112317e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5783340184179513e+04
+      "bytes_per_second": 7.5159611932838263e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -713,11 +713,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2444034166009887e+05,
-      "cpu_time": 4.2438672350791789e+05,
+      "iterations": 1654,
+      "real_time": 4.2586562879290094e+05,
+      "cpu_time": 4.2549395405078761e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5402924331592498e+04
+      "bytes_per_second": 7.5206709038644607e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -728,11 +728,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2873117113137117e+05,
-      "cpu_time": 4.2760718635809858e+05,
+      "iterations": 1654,
+      "real_time": 4.2573599334642355e+05,
+      "cpu_time": 4.2553083434099023e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.4835037906032012e+04
+      "bytes_per_second": 7.5200190955745100e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -743,11 +743,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2806935140044324e+05,
-      "cpu_time": 4.2681242387332697e+05,
+      "iterations": 1654,
+      "real_time": 4.2571180955897638e+05,
+      "cpu_time": 4.2547279322853609e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.4974387365765229e+04
+      "bytes_per_second": 7.5210449432454538e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -758,11 +758,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2617899877539341e+05,
-      "cpu_time": 4.2569914738124207e+05,
+      "iterations": 1654,
+      "real_time": 4.2763323760087497e+05,
+      "cpu_time": 4.2709975816202984e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5170458284573106e+04
+      "bytes_per_second": 7.4923947832955891e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -773,11 +773,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.3177035139740619e+05,
-      "cpu_time": 4.2768026796589547e+05,
+      "iterations": 1654,
+      "real_time": 4.2563825089441094e+05,
+      "cpu_time": 4.2542563482466759e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.4822250164115074e+04
+      "bytes_per_second": 7.5218786505867916e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -788,11 +788,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.4051786418968753e+05,
-      "cpu_time": 4.2942874543239916e+05,
+      "iterations": 1654,
+      "real_time": 4.3018225997409353e+05,
+      "cpu_time": 4.2659552599757939e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.4517601209436165e+04
+      "bytes_per_second": 7.5012507281151324e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -803,11 +803,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.2511637210726837e+05,
-      "cpu_time": 4.2478562728379993e+05,
+      "iterations": 1654,
+      "real_time": 4.2540399516603828e+05,
+      "cpu_time": 4.2520798065296229e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5332115647643484e+04
+      "bytes_per_second": 7.5257289270205671e+04
     },
     {
       "name": "RSABenchmark/Decrypt",
@@ -818,11 +818,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 1642,
-      "real_time": 4.3289362545872171e+05,
-      "cpu_time": 4.3068514007308101e+05,
+      "iterations": 1654,
+      "real_time": 4.2446604232005932e+05,
+      "cpu_time": 4.2399153567110194e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.4300218471828543e+04
+      "bytes_per_second": 7.5473204787802621e+04
     },
     {
       "name": "RSABenchmark/Decrypt_mean",
@@ -835,10 +835,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 4.2859563781970169e+05,
-      "cpu_time": 4.2648428745432419e+05,
+      "real_time": 4.2614092605849821e+05,
+      "cpu_time": 4.2552829504232126e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5034375870682663e+04
+      "bytes_per_second": 7.5200922873124058e+04
     },
     {
       "name": "RSABenchmark/Decrypt_median",
@@ -851,10 +851,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 4.2712417508791824e+05,
-      "cpu_time": 4.2625578562728455e+05,
+      "real_time": 4.2572390145269985e+05,
+      "cpu_time": 4.2548337363966182e+05,
       "time_unit": "ns",
-      "bytes_per_second": 7.5072422825169167e+04
+      "bytes_per_second": 7.5208579235549580e+04
     },
     {
       "name": "RSABenchmark/Decrypt_stddev",
@@ -867,10 +867,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.3022304869729669e+03,
-      "cpu_time": 2.4912983966931833e+03,
+      "real_time": 1.6428105190112233e+03,
+      "cpu_time": 8.7052673000853156e+02,
       "time_unit": "ns",
-      "bytes_per_second": 4.3812421618391647e+02
+      "bytes_per_second": 1.5379734950838736e+02
     },
     {
       "name": "RSABenchmark/Decrypt_cv",
@@ -883,10 +883,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 1.2371172310445839e-02,
-      "cpu_time": 5.8414775643053371e-03,
+      "real_time": 3.8550874101815503e-03,
+      "cpu_time": 2.0457552180447899e-03,
       "time_unit": "ns",
-      "bytes_per_second": 5.8389799488570123e-03
+      "bytes_per_second": 2.0451524214386038e-03
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -897,11 +897,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2886169395505249e+02,
-      "cpu_time": 5.2831209234887194e+02,
+      "iterations": 1337103,
+      "real_time": 5.2224650980382160e+02,
+      "cpu_time": 5.2221182661320711e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9382482718638957e+09
+      "bytes_per_second": 1.9608900982597973e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -912,11 +912,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2986678681679041e+02,
-      "cpu_time": 5.2929731996964506e+02,
+      "iterations": 1337103,
+      "real_time": 5.2167359806197146e+02,
+      "cpu_time": 5.2163296320477878e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9346404400058665e+09
+      "bytes_per_second": 1.9630661254779749e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -927,11 +927,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.3322446291660742e+02,
-      "cpu_time": 5.3185996792351932e+02,
+      "iterations": 1337103,
+      "real_time": 5.2450568503590989e+02,
+      "cpu_time": 5.2448764231326766e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9253188090050983e+09
+      "bytes_per_second": 1.9523815575208194e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -942,11 +942,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2957091074706170e+02,
-      "cpu_time": 5.2907854813961137e+02,
+      "iterations": 1337103,
+      "real_time": 5.2246430006306321e+02,
+      "cpu_time": 5.2235467275146345e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9354404059674530e+09
+      "bytes_per_second": 1.9603538618811584e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -957,11 +957,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2434936805803659e+02,
-      "cpu_time": 5.2428895383311044e+02,
+      "iterations": 1337103,
+      "real_time": 5.2196134703814846e+02,
+      "cpu_time": 5.2178254031289941e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9531214467012320e+09
+      "bytes_per_second": 1.9625033819374902e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -972,11 +972,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.4595182794834966e+02,
-      "cpu_time": 5.2732384718561252e+02,
+      "iterations": 1337103,
+      "real_time": 5.2271509150192503e+02,
+      "cpu_time": 5.2271141415434022e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9418806971564145e+09
+      "bytes_per_second": 1.9590159546384902e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -987,11 +987,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2591144871376457e+02,
-      "cpu_time": 5.2572907598322843e+02,
+      "iterations": 1337103,
+      "real_time": 5.2851425805471433e+02,
+      "cpu_time": 5.2760482924651069e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9477712890140154e+09
+      "bytes_per_second": 1.9408465261063042e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -1002,11 +1002,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.4849200200524172e+02,
-      "cpu_time": 5.4268464719647477e+02,
+      "iterations": 1337103,
+      "real_time": 5.3163649322075867e+02,
+      "cpu_time": 5.3089702139625979e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.8869153665761781e+09
+      "bytes_per_second": 1.9288109722425618e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -1017,11 +1017,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2560705410328717e+02,
-      "cpu_time": 5.2540544455191014e+02,
+      "iterations": 1337103,
+      "real_time": 5.2903534731148886e+02,
+      "cpu_time": 5.2858381141916243e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9489710482031915e+09
+      "bytes_per_second": 1.9372519132788515e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot",
@@ -1032,11 +1032,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 1325582,
-      "real_time": 5.2350310429543038e+02,
-      "cpu_time": 5.2331277883979089e+02,
+      "iterations": 1337103,
+      "real_time": 5.5273917491587008e+02,
+      "cpu_time": 5.4453022691595277e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9567647521817758e+09
+      "bytes_per_second": 1.8805200324683766e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot_mean",
@@ -1049,10 +1049,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.3153386595596226e+02,
-      "cpu_time": 5.2872926759717757e+02,
+      "real_time": 5.2774918050076724e+02,
+      "cpu_time": 5.2667969483278432e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9369072526675119e+09
+      "bytes_per_second": 1.9445640423811827e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot_median",
@@ -1065,10 +1065,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.2921630235105704e+02,
-      "cpu_time": 5.2781796976724229e+02,
+      "real_time": 5.2361038826891740e+02,
+      "cpu_time": 5.2359952823380399e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9400644845101552e+09
+      "bytes_per_second": 1.9556987560796547e+09
     },
     {
       "name": "SHA256Benchmark/SingleShot_stddev",
@@ -1081,10 +1081,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 8.7872116096190567e+00,
-      "cpu_time": 5.5402718800998541e+00,
+      "real_time": 9.4653400998861041e+00,
+      "cpu_time": 7.0677711667685088e+00,
       "time_unit": "ns",
-      "bytes_per_second": 1.9966881152258329e+07
+      "bytes_per_second": 2.5532241877555698e+07
     },
     {
       "name": "SHA256Benchmark/SingleShot_cv",
@@ -1097,10 +1097,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 1.6531800083547415e-02,
-      "cpu_time": 1.0478466428154712e-02,
+      "real_time": 1.7935300422266303e-02,
+      "cpu_time": 1.3419486712910888e-02,
       "time_unit": "ns",
-      "bytes_per_second": 1.0308640811148757e-02
+      "bytes_per_second": 1.3130059654034654e-02
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1111,11 +1111,11 @@
       "repetitions": 10,
       "repetition_index": 0,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.1936975000717212e+02,
-      "cpu_time": 5.1543999999999812e+02,
+      "iterations": 1396620,
+      "real_time": 5.0334501010893587e+02,
+      "cpu_time": 5.0067734960118389e+02,
       "time_unit": "ns",
-      "bytes_per_second": 1.9866521806611900e+09
+      "bytes_per_second": 2.0452293294587231e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1126,11 +1126,11 @@
       "repetitions": 10,
       "repetition_index": 1,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0653254200005898e+02,
-      "cpu_time": 5.0498999999999938e+02,
+      "iterations": 1396620,
+      "real_time": 5.0142382467048759e+02,
+      "cpu_time": 5.0140482020878852e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0277629259985371e+09
+      "bytes_per_second": 2.0422619782027607e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1141,11 +1141,11 @@
       "repetitions": 10,
       "repetition_index": 2,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0084666600741912e+02,
-      "cpu_time": 5.0084000000000378e+02,
+      "iterations": 1396620,
+      "real_time": 4.9856164670126270e+02,
+      "cpu_time": 4.9852143031031892e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0445651305806093e+09
+      "bytes_per_second": 2.0540741836566224e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1156,11 +1156,11 @@
       "repetitions": 10,
       "repetition_index": 3,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0986975000705570e+02,
-      "cpu_time": 5.0648300000000290e+02,
+      "iterations": 1396620,
+      "real_time": 4.9811562915541322e+02,
+      "cpu_time": 4.9801449213100318e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0217855288331378e+09
+      "bytes_per_second": 2.0561650638283753e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1171,11 +1171,11 @@
       "repetitions": 10,
       "repetition_index": 4,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0737879199732561e+02,
-      "cpu_time": 5.0681699999999807e+02,
+      "iterations": 1396620,
+      "real_time": 5.0022867708768160e+02,
+      "cpu_time": 4.9977302344230844e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0204531418638363e+09
+      "bytes_per_second": 2.0489301182103641e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1186,11 +1186,11 @@
       "repetitions": 10,
       "repetition_index": 5,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0983599999744911e+02,
-      "cpu_time": 5.0813899999999990e+02,
+      "iterations": 1396620,
+      "real_time": 4.9741951426024701e+02,
+      "cpu_time": 4.9741232403947208e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0151966292687635e+09
+      "bytes_per_second": 2.0586542602807336e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1201,11 +1201,11 @@
       "repetitions": 10,
       "repetition_index": 6,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0634512500255369e+02,
-      "cpu_time": 5.0543000000000404e+02,
+      "iterations": 1396620,
+      "real_time": 5.0042414902162551e+02,
+      "cpu_time": 5.0034798298749439e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0259976653542366e+09
+      "bytes_per_second": 2.0465756529802852e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1216,11 +1216,11 @@
       "repetitions": 10,
       "repetition_index": 7,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0485041699721478e+02,
-      "cpu_time": 5.0433599999999501e+02,
+      "iterations": 1396620,
+      "real_time": 5.0154316062803065e+02,
+      "cpu_time": 5.0108762583952773e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0303924367881930e+09
+      "bytes_per_second": 2.0435547540899243e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1231,11 +1231,11 @@
       "repetitions": 10,
       "repetition_index": 8,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0335129100130865e+02,
-      "cpu_time": 5.0310400000000044e+02,
+      "iterations": 1396620,
+      "real_time": 5.1538151035350222e+02,
+      "cpu_time": 5.0564147728086516e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0353644574481599e+09
+      "bytes_per_second": 2.0251503209480691e+09
     },
     {
       "name": "SHA256Benchmark/Streaming",
@@ -1246,11 +1246,11 @@
       "repetitions": 10,
       "repetition_index": 9,
       "threads": 1,
-      "iterations": 1000000,
-      "real_time": 5.0723470900265966e+02,
-      "cpu_time": 5.0617900000000304e+02,
+      "iterations": 1396620,
+      "real_time": 5.2785946355918145e+02,
+      "cpu_time": 5.1015594793142901e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0229997688564596e+09
+      "bytes_per_second": 2.0072293661420519e+09
     },
     {
       "name": "SHA256Benchmark/Streaming_mean",
@@ -1263,10 +1263,10 @@
       "aggregate_name": "mean",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.0756150420202187e+02,
-      "cpu_time": 5.0617580000000055e+02,
+      "real_time": 5.0443025855463685e+02,
+      "cpu_time": 5.0130364737723920e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0231169865653124e+09
+      "bytes_per_second": 2.0427825027797909e+09
     },
     {
       "name": "SHA256Benchmark/Streaming_median",
@@ -1279,10 +1279,10 @@
       "aggregate_name": "median",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 5.0688362550135935e+02,
-      "cpu_time": 5.0580450000000354e+02,
+      "real_time": 5.0092398684605649e+02,
+      "cpu_time": 5.0051266629433911e+02,
       "time_unit": "ns",
-      "bytes_per_second": 2.0244987171053481e+09
+      "bytes_per_second": 2.0459024912195041e+09
     },
     {
       "name": "SHA256Benchmark/Streaming_stddev",
@@ -1295,10 +1295,10 @@
       "aggregate_name": "stddev",
       "aggregate_unit": "time",
       "iterations": 10,
-      "real_time": 4.9752661597698538e+00,
-      "cpu_time": 3.8505265960104653e+00,
+      "real_time": 9.6872034259609432e+00,
+      "cpu_time": 3.8670534137263557e+00,
       "time_unit": "ns",
-      "bytes_per_second": 1.5253907993911592e+07
+      "bytes_per_second": 1.5607912832897436e+07
     },
     {
       "name": "SHA256Benchmark/Streaming_cv",
@@ -1311,10 +1311,10 @@
       "aggregate_name": "cv",
       "aggregate_unit": "percentage",
       "iterations": 10,
-      "real_time": 9.8022921726340726e-03,
-      "cpu_time": 7.6070934169718525e-03,
+      "real_time": 1.9204247290236027e-02,
+      "cpu_time": 7.7139941709148093e-03,
       "time_unit": "ns",
-      "bytes_per_second": 7.5398052090939480e-03
+      "bytes_per_second": 7.6405162133797401e-03
     }
   ]
 }

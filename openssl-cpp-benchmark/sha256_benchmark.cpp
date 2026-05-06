@@ -69,7 +69,6 @@ BENCHMARK_DEFINE_F(SHA256Benchmark, SingleShot)(benchmark::State& state) {
         benchmark::DoNotOptimize(out.data());
         benchmark::ClobberMemory();
     }
-    state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(plaintext_.size()));
 }
 
 BENCHMARK_DEFINE_F(SHA256Benchmark, Streaming)(benchmark::State& state) {
@@ -100,7 +99,6 @@ BENCHMARK_DEFINE_F(SHA256Benchmark, Streaming)(benchmark::State& state) {
     }
 
     EVP_MD_CTX_free(ctx);
-    state.SetBytesProcessed(state.iterations() * static_cast<int64_t>(plaintext_.size()));
 }
 
 BENCHMARK_REGISTER_F(SHA256Benchmark, SingleShot);

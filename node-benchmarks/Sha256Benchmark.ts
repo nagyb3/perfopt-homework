@@ -35,9 +35,7 @@ async function main() {
   const outputFile = parseOutputPath(process.argv.slice(2), OUTPUT_FILE);
   const bench = new Bench({
     name: "node:crypto SHA-256 benchmark",
-    time: Infinity,
     warmup: true,
-    warmupTime: Infinity,
     warmupIterations: 20,
     iterations: 10,
     retainSamples: false,

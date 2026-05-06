@@ -42,9 +42,7 @@ async function main() {
   const outputFile = parseOutputPath(process.argv.slice(2), DEFAULT_OUTPUT_FILE);
   const bench = new Bench({
     name: "node:crypto ChaCha20-Poly1305 benchmark",
-    time: Infinity,
     warmup: true,
-    warmupTime: Infinity,
     warmupIterations: 20,
     iterations: 10,
     retainSamples: false,
