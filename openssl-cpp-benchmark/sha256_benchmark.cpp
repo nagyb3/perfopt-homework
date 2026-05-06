@@ -58,19 +58,6 @@ protected:
     }
 };
 
-BENCHMARK_DEFINE_F(SHA256Benchmark, SingleShot)(benchmark::State& state) {
-    std::array<unsigned char, DIGEST_SIZE> out{};
-    unsigned int outlen = 0;
-    for ([[maybe_unused]] auto _ : state) {
-        if (EVP_Digest(plaintext_.data(), plaintext_.size(), out.data(), &outlen, EVP_sha256(), nullptr) != 1) {
-            state.SkipWithError("EVP_Digest single-shot failed");
-            break;
-        }
-        benchmark::DoNotOptimize(out.data());
-        benchmark::ClobberMemory();
-    }
-}
-
 BENCHMARK_DEFINE_F(SHA256Benchmark, Streaming)(benchmark::State& state) {
     std::array<unsigned char, DIGEST_SIZE> out{};
     unsigned int outlen = 0;

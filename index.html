@@ -323,7 +323,7 @@
               labels: ["sha256"],
               java: [javaMap.sha256?.sha256 || 0],
               node: [nodeMap.sha256?.sha256 || 0],
-              cpp: [cppMap.sha256?.singleshot || 0],
+              cpp: [cppMap.sha256?.streaming || 0],
             },
             chacha20: {
               labels: ["encrypt", "decrypt"],
