@@ -16,7 +16,7 @@ Currently the cmake project is setup to look for OpenSSL as if it is installed a
 ## Building and Running
 Build
 ```
-cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Release
+cmake -S . -B cmake-build-debug
 cmake --build cmake-build-debug --config Release -j
 ```
 
@@ -25,7 +25,7 @@ Run
 ./cmake-build-debug/openssl_cpp_benchmark \
 --benchmark_filter=".*" \
 --benchmark_repetitions=10 \
---benchmark_min_warmup_time=0.1 \
+--benchmark_min_warmup_time=1.0 \
 --benchmark_report_aggregates_only=false \
 --benchmark_format=json \
 --benchmark_out=results.json

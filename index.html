@@ -107,12 +107,7 @@
           This benchmark aims to compare 3 well-know cryptographic libraries:
           Bouncy Castle, Node's Crypto module and OpenSSL. The cryptographic
           algorithms I have chosen to test using the given libraries were the
-          following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305. RSA
-          is an asymmetric cryptographic algorithm that relies on the
-          mathematical difficulty of factoring large prime numbers to provide
-          secure data encryption. SHA-256 is a cryptographic hash function from
-          the SHA-2 family that generates a unique, fixed-size 256-bit signature
-          to ensure data integrity and detect unauthorized modifications.
+          following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305.
         </p>
         <p></p>
         <p>
@@ -131,13 +126,19 @@
           measured the encryption and decryption speed of a message.
         </p>
         <p>
-          In the tests I have chosen to take a few notable measures in order to
-          achieve more comparable results. During the benchmarks each algorithm
-          and library pair (for example RSA encryption using BouncyCastle) had
-          its speed measured for 10 iterations. The below numbers in the graphs
-          are the statictical mean (average) values of those 10 iterations.
-          Also, in each benchmark I have setup the benchmarking framework to
-          start the process with a warmup period.
+          In the tests I have taken a few notable measures in order to achieve
+          more comparable results. The Java and TypeScript benchmarks were
+          preceded by 20 warmup iterations. However, in the Google Benchmark
+          framework I could find a warmup iteration parameter so I ended up
+          using a fixed 1 second long warmup period. During the benchmarks each
+          algorithm and library pair combination had its speed measured for 10
+          iterations. The below numbers in the graphs are the statictical mean
+          (average) values of those 10 iterations.
+        </p>
+        <p>
+          The benchmarks were configured to exclude unncessary overhead, such as
+          setup of the libraries, ensuring the measurements reflected only the
+          execution time of the core cryptographic functions.
         </p>
 
         <h3>Benchmarking frameworks</h3>
@@ -172,7 +173,10 @@
             <strong>Typescript:</strong> The tests were ran on TypeScript
             version 6.0.2 using tsx 4.21.0.
           </li>
-          <li><strong>Java:</strong> TODO</li>
+          <li>
+            <strong>Java:</strong> The Java sources were compiled and ran with
+            Oracle OpenJDK 23.0.1.
+          </li>
           <li>
             <strong>C++: </strong>The C++ source codes were compiled with Clang
             22.1.2 using <code>-O3</code> optimization. For building the project
@@ -182,7 +186,7 @@
       </div>
 
       <div>
-        <h2>Hardware</h2>
+        <h3>Hardware</h3>
         <p>The benchmarks were ran on a M3 Macbook Air.</p>
       </div>
 
@@ -190,6 +194,11 @@
 
       <section class="chart-card">
         <h2>SHA-256</h2>
+        <p>
+          SHA-256 is a cryptographic hash function from the SHA-2 family that
+          generates a unique, fixed-size 256-bit signature to ensure data
+          integrity and detect unauthorized modifications.
+        </p>
         <div class="chart-container">
           <canvas id="chart-sha256"></canvas>
         </div>
@@ -197,6 +206,13 @@
 
       <section class="chart-card">
         <h2>ChaCha20-Poly1305</h2>
+        <p>
+          ChaCha20-Poly1305 is a symmetric key streaming cypher. It uses the
+          Poly-1305 message authenication algorithm in order to generate a MAC
+          (Message Authenication Code) for the cypher texts so if an
+          eavesdropper were to change the encrypted message, it would be
+          detectable by the source.
+        </p>
         <div class="chart-container">
           <canvas id="chart-chacha20"></canvas>
         </div>
@@ -204,12 +220,30 @@
 
       <section class="chart-card">
         <h2>RSA</h2>
+        <p>
+          RSA is an asymmetric cryptographic algorithm that relies on the
+          mathematical difficulty of factoring large prime numbers to provide
+          secure data encryption.
+        </p>
         <div class="chart-container">
           <canvas id="chart-rsa"></canvas>
         </div>
       </section>
 
-      <div>
+      <!-- <div>
+        <h2>Naive implementation of ChaCha20-Poly1305</h2>
+        TODO add graph and explination
+      </div> -->
+
+      <h2 style="margin-top: 60px">Conclusion</h2>
+      <p>
+        In my measurements I have witnessed that OpenSSL managed to outperform
+        or atleast tie each library in every algorithm, as expeceted. However,
+        contirary to my expectation Node's crypto module manage to outperform
+        Java's Bouncy Castle library.
+      </p>
+
+      <div style="margin-top: 60px">
         <h2>Source code</h2>
         <p>
           The source code for all of benchmarks and this webpage can be found in
@@ -217,6 +251,10 @@
           <a target="_blank" href="https://github.com/nagyb3/perfopt-homework"
             >https://github.com/nagyb3/perfopt-homework</a
           >
+        </p>
+        <p>
+          The charts on this website were made with
+          <a href="https://www.chartjs.org/" target="_blank">Chart.js</a>
         </p>
       </div>
 
@@ -228,13 +266,6 @@
           in order to make results accurate.
         </p>
       </div>
-
-      <h2>Conclusion</h2>
-      <p>In my measurements I have witness that X and Y. TODO TODO</p>
-      <p>
-        Even though TypeScript is thought of as a much slower programmign
-        language than Java or C+ TODO TODO
-      </p>
     </div>
 
     <script>
@@ -355,7 +386,7 @@
           const errorMsg = document.createElement("div");
           errorMsg.style.cssText =
             "padding: 12px; background: #fee; border: 1px solid #fcc; border-radius: 6px; margin: 12px 24px; color: #c00;";
-          errorMsg.innerHTML = `<strong>Error loading data:</strong> ${error.message}<br/><small>Serve this file from a web server: <code>python3 -m http.server 8000</code></small>`;
+          errorMsg.innerHTML = `<strong>Error loading data:</strong> ${error.message}<br/>`;
           document.body.insertBefore(errorMsg, document.body.firstChild);
         }
       }
@@ -415,7 +446,10 @@
             },
             x: {
               type: "logarithmic",
-              title: { display: true, text: "milliseconds / op (log scale)" },
+              title: {
+                display: true,
+                text: "milliseconds / operation (log scale)",
+              },
               beginAtZero: false,
               ticks: {
                 autoSkip: true,

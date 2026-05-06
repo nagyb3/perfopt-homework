@@ -88,7 +88,6 @@ BENCHMARK_DEFINE_F(SHA256Benchmark, Streaming)(benchmark::State& state) {
     EVP_MD_CTX_free(ctx);
 }
 
-BENCHMARK_REGISTER_F(SHA256Benchmark, SingleShot);
 BENCHMARK_REGISTER_F(SHA256Benchmark, Streaming);
 
 } // namespace
