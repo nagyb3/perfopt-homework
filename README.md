@@ -32,5 +32,5 @@ quarto preview report.ipynb
 Make final `index.html` file using quarto from the notebook:
 
 ```
-quarto render report.ipynb --to html --output index.html -P embed-resources:true
+quarto render report.ipynb --to html --output index.html -M embed-resources:true
 ```
