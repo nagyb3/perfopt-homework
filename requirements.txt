@@ -3,3 +3,4 @@ jupyterlab
 matplotlib
 plotly
 pandas
+plotly

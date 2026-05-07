@@ -448,12 +448,12 @@
               type: "logarithmic",
               title: {
                 display: true,
-                text: "milliseconds / operation (log scale)",
+                text: "milliseconds / operation",
               },
               beginAtZero: false,
               ticks: {
                 autoSkip: true,
-                maxTicksLimit: 8,
+                maxTicksLimit: 12,
                 sampleSize: 8,
                 major: { enabled: true },
                 callback(value) {
@@ -482,17 +482,11 @@
         );
         const allValues = javaData
           .concat(nodeData)
+          .concat(cppData)
           .filter((v) => v !== null && Number.isFinite(v));
+
         const maxValue = allValues.length ? Math.max(...allValues) : 1;
         const minValue = allValues.length ? Math.min(...allValues) : 0.0001;
-
-        // category specific scaling to spread out the bars better:
-        let suggestedMax = Math.max(1, maxValue * 1.5);
-        if (category === "chacha20") {
-          suggestedMax = Math.max(0.01, maxValue * 5);
-        } else if (category === "sha256") {
-          suggestedMax = Math.max(0.01, maxValue * 2);
-        }
 
         return new Chart(ctx, {
           type: "bar",
@@ -524,8 +518,7 @@
           },
           options: (() => {
             const opts = chartOptions(category, category);
-            opts.scales.x.suggestedMin = Math.max(0.0001, minValue / 3);
-            opts.scales.x.suggestedMax = suggestedMax;
+            // opts.scales.x.suggestedMin = Math.max(0.0001, minValue / 3);
             opts.scales.x.ticks.callback = function (value) {
               return formatSeconds(
                 Number(value),
