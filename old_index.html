@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cryptography Library Benchmark</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --fg: #1f2937;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --panel: #f9fafb;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Arial,
+          sans-serif;
+        line-height: 1.45;
+      }
+      .wrap {
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 1.8rem;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin: 0;
+      }
+      .note {
+        margin: 14px 0 0;
+        padding: 12px 14px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: var(--muted);
+      }
+      .runtime-note {
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+      .chart-card {
+        margin: 22px 0 34px;
+        padding: 16px 16px 8px;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      .chart-card h2 {
+        margin: 0 0 8px;
+        font-size: 1.15rem;
+      }
+      .chart-card p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        height: 500px;
+      }
+      canvas {
+        display: block;
+      }
+      .mini strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+      code {
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <h1>Cryptography Library Benchmark</h1>
+        <p>Author: Bence Nagy</p>
+      </header>
+      <div>
+        <h2>Introduction</h2>
+        <p>
+          This benchmark aims to compare 3 well-know cryptographic libraries:
+          Bouncy Castle, Node's Crypto module and OpenSSL. The cryptographic
+          algorithms I have chosen to test using the given libraries were the
+          following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305.
+        </p>
+        <p></p>
+        <p>
+          The goal of this benchmark isn't to compare the algorithms to each
+          other (for example trying to decide of ChaCha20 or RSA can encrypt a
+          message faster), but rather comparing the libraries to each other and
+          seeing which library can achieve a faster runtime for the chosen
+          algorithms in the given programming language.
+        </p>
+      </div>
+
+      <div>
+        <h2>Methodology</h2>
+        <p>
+          For the encryption algorithms (ChaCha20-Poly1305 and RSA) I both
+          measured the encryption and decryption speed of a message.
+        </p>
+        <p>
+          In the tests I have taken a few notable measures in order to achieve
+          more comparable results. The Java and TypeScript benchmarks were
+          preceded by 20 warmup iterations. However, in the Google Benchmark
+          framework I could find a warmup iteration parameter so I ended up
+          using a fixed 1 second long warmup period. During the benchmarks each
+          algorithm and library pair combination had its speed measured for 10
+          iterations. The below numbers in the graphs are the statictical mean
+          (average) values of those 10 iterations.
+        </p>
+        <p>
+          The benchmarks were configured to exclude unncessary overhead, such as
+          setup of the libraries, ensuring the measurements reflected only the
+          execution time of the core cryptographic functions.
+        </p>
+
+        <h3>Benchmarking frameworks</h3>
+        <p>
+          For testing the runtime of each algorithm I have used a third-party
+          benchmark library:
+        </p>
+        <ul>
+          <li>
+            <strong>TypeScript: </strong>
+            <a href="https://github.com/tinylibs/tinybench" target="_blank"
+              >tinybench</a
+            >
+          </li>
+          <li>
+            <strong>Java: </strong>
+            <a href="https://github.com/openjdk/jmh" target="_blank"
+              >Java Microbenchmark Harness</a
+            >
+          </li>
+          <li>
+            <strong>C++: </strong>
+            <a href="https://github.com/google/benchmark" target="_blank"
+              >Google BenchMark</a
+            >
+          </li>
+        </ul>
+
+        <h3>Compilers and language versions:</h3>
+        <ul>
+          <li>
+            <strong>Typescript:</strong> The tests were ran on TypeScript
+            version 6.0.2 using tsx 4.21.0.
+          </li>
+          <li>
+            <strong>Java:</strong> The Java sources were compiled and ran with
+            Oracle OpenJDK 23.0.1.
+          </li>
+          <li>
+            <strong>C++: </strong>The C++ source codes were compiled with Clang
+            22.1.2 using <code>-O3</code> optimization. For building the project
+            I have setup a CMake project and used C++20.
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3>Hardware</h3>
+        <p>The benchmarks were ran on a M3 Macbook Air.</p>
+      </div>
+
+      <h2>Results</h2>
+
+      <section class="chart-card">
+        <h2>SHA-256</h2>
+        <p>
+          SHA-256 is a cryptographic hash function from the SHA-2 family that
+          generates a unique, fixed-size 256-bit signature to ensure data
+          integrity and detect unauthorized modifications.
+        </p>
+        <div class="chart-container">
+          <canvas id="chart-sha256"></canvas>
+        </div>
+      </section>
+
+      <section class="chart-card">
+        <h2>ChaCha20-Poly1305</h2>
+        <p>
+          ChaCha20-Poly1305 is a symmetric key streaming cypher. It uses the
+          Poly-1305 message authenication algorithm in order to generate a MAC
+          (Message Authenication Code) for the cypher texts so if an
+          eavesdropper were to change the encrypted message, it would be
+          detectable by the source.
+        </p>
+        <div class="chart-container">
+          <canvas id="chart-chacha20"></canvas>
+        </div>
+      </section>
+
+      <section class="chart-card">
+        <h2>RSA</h2>
+        <p>
+          RSA is an asymmetric cryptographic algorithm that relies on the
+          mathematical difficulty of factoring large prime numbers to provide
+          secure data encryption.
+        </p>
+        <div class="chart-container">
+          <canvas id="chart-rsa"></canvas>
+        </div>
+      </section>
+
+      <!-- <div>
+        <h2>Naive implementation of ChaCha20-Poly1305</h2>
+        TODO add graph and explination
+      </div> -->
+
+      <h2 style="margin-top: 60px">Conclusion</h2>
+      <p>
+        In my measurements I have witnessed that OpenSSL managed to outperform
+        or atleast tie each library in every algorithm, as expeceted. However,
+        contirary to my expectation Node's crypto module manage to outperform
+        Java's Bouncy Castle library.
+      </p>
+
+      <div style="margin-top: 60px">
+        <h2>Source code</h2>
+        <p>
+          The source code for all of benchmarks and this webpage can be found in
+          the following Github repository:
+          <a target="_blank" href="https://github.com/nagyb3/perfopt-homework"
+            >https://github.com/nagyb3/perfopt-homework</a
+          >
+        </p>
+        <p>
+          The charts on this website were made with
+          <a href="https://www.chartjs.org/" target="_blank">Chart.js</a>
+        </p>
+      </div>
+
+      <div>
+        <h2>AI dislosure</h2>
+        <p>
+          During the creation of the benchmarks I have used Github Copilot for
+          speeding up the coding process but have manually reviewed every change
+          in order to make results accurate.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      let REPORT_DATA = null;
+
+      async function loadBenchmarkData() {
+        try {
+          const [javaData, sha256Data, chacha20Data, rsaData, cppData] =
+            await Promise.all([
+              fetch("./bouncycastle-benchmark/results.json").then((r) =>
+                r.json(),
+              ),
+              fetch("./node-benchmarks/results/sha256-report.json").then((r) =>
+                r.json(),
+              ),
+              fetch(
+                "./node-benchmarks/results/chacha20-benchmark-results.json",
+              ).then((r) => r.json()),
+              fetch(
+                "./node-benchmarks/results/rsa-benchmark-results.json",
+              ).then((r) => r.json()),
+              fetch("./openssl-cpp-benchmark/results.json").then((r) =>
+                r.json(),
+              ),
+              [],
+            ]);
+
+          const javaMap = {};
+          for (const entry of javaData) {
+            const parts = entry.benchmark.split(".");
+            const bench = parts[parts.length - 2];
+            const op = parts[parts.length - 1];
+            const scoreNs = entry.primaryMetric.score;
+            const category = bench.toLowerCase().includes("chacha")
+              ? "chacha20"
+              : bench.toLowerCase().includes("sha")
+                ? "sha256"
+                : bench.toLowerCase().includes("rsa")
+                  ? "rsa"
+                  : bench;
+            if (!javaMap[category]) javaMap[category] = {};
+            javaMap[category][op.toLowerCase()] = scoreNs / 1e9; // Convert ns/op to seconds
+          }
+
+          const nodeMap = {};
+
+          if (sha256Data.tasks && sha256Data.tasks[0]) {
+            const latencyMs = sha256Data.tasks[0].latency.mean;
+            nodeMap["sha256"] = { sha256: latencyMs / 1000 };
+          }
+
+          if (chacha20Data.tasks && chacha20Data.tasks.length >= 2) {
+            nodeMap["chacha20"] = {
+              encrypt: chacha20Data.tasks[0].latency.mean / 1000,
+              decrypt: chacha20Data.tasks[1].latency.mean / 1000,
+            };
+          }
+
+          if (rsaData.tasks && rsaData.tasks.length >= 2) {
+            nodeMap["rsa"] = {
+              encrypt: rsaData.tasks[0].latency.mean / 1000,
+              decrypt: rsaData.tasks[1].latency.mean / 1000,
+            };
+          }
+
+          const cppMap = {};
+
+          for (const entry of cppData.benchmarks) {
+            if (
+              entry.run_type === "aggregate" &&
+              entry.aggregate_name === "mean"
+            ) {
+              const nameParts = entry.name.split("/");
+              const category = nameParts[0]
+                .replace("Benchmark", "")
+                .toLowerCase();
+              const op = nameParts[1].replace("_mean", "").toLowerCase();
+
+              if (!cppMap[category]) cppMap[category] = {};
+              cppMap[category][op] = entry.real_time / 1e9;
+            }
+          }
+
+          REPORT_DATA = {
+            sha256: {
+              labels: ["sha256"],
+              java: [javaMap.sha256?.sha256 || 0],
+              node: [nodeMap.sha256?.sha256 || 0],
+              cpp: [cppMap.sha256?.streaming || 0],
+            },
+            chacha20: {
+              labels: ["encrypt", "decrypt"],
+              java: [
+                javaMap.chacha20?.encrypt || 0,
+                javaMap.chacha20?.decrypt || 0,
+              ],
+              node: [
+                nodeMap.chacha20?.encrypt || 0,
+                nodeMap.chacha20?.decrypt || 0,
+              ],
+              cpp: [
+                cppMap.chacha20?.encrypt || 0,
+                cppMap.chacha20?.decrypt || 0,
+              ],
+            },
+            rsa: {
+              labels: ["encrypt", "decrypt"],
+              java: [javaMap.rsa?.encrypt || 0, javaMap.rsa?.decrypt || 0],
+              node: [nodeMap.rsa?.encrypt || 0, nodeMap.rsa?.decrypt || 0],
+              cpp: [cppMap.rsa?.encrypt || 0, cppMap.rsa?.decrypt || 0],
+            },
+          };
+
+          console.log("Benchmark data loaded:", REPORT_DATA);
+          initializeCharts();
+        } catch (error) {
+          console.error("Error loading benchmark data:", error);
+          const errorMsg = document.createElement("div");
+          errorMsg.style.cssText =
+            "padding: 12px; background: #fee; border: 1px solid #fcc; border-radius: 6px; margin: 12px 24px; color: #c00;";
+          errorMsg.innerHTML = `<strong>Error loading data:</strong> ${error.message}<br/>`;
+          document.body.insertBefore(errorMsg, document.body.firstChild);
+        }
+      }
+
+      const COLORS = {
+        java: "rgba(31, 119, 180, 0.85)",
+        node: "rgba(255, 127, 14, 0.85)",
+      };
+
+      function formatSeconds(value, precision) {
+        if (value === null || value === undefined || Number.isNaN(value))
+          return "N/A";
+        return `${value.toFixed(precision || 3)} ms`;
+      }
+
+      function chartOptions(title, category) {
+        const precision =
+          category === "sha256" || category === "chacha20" ? 6 : 3;
+        return {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: "y",
+          interaction: { mode: "nearest", axis: "y", intersect: false },
+          hover: { mode: "nearest", axis: "y", intersect: false },
+          layout: {
+            padding: { top: 16, right: 64, bottom: 16, left: 16 },
+          },
+          plugins: {
+            legend: { position: "top" },
+            title: { display: false, text: title },
+            tooltip: {
+              callbacks: {
+                label(context) {
+                  return `${context.dataset.label}: ${context.parsed.x.toFixed(precision)} ms`;
+                },
+              },
+            },
+            datalabels: {
+              anchor: "end",
+              align: "left",
+              offset: 6,
+              clamp: true,
+              clip: false,
+              color: "#111827",
+              font: { size: 11, weight: "700" },
+              formatter(value) {
+                return value === null || value === undefined
+                  ? ""
+                  : formatSeconds(Number(value), precision);
+              },
+            },
+          },
+          scales: {
+            y: {
+              grid: { display: false },
+              ticks: { font: { size: 12 } },
+            },
+            x: {
+              type: "logarithmic",
+              title: {
+                display: true,
+                text: "milliseconds / operation",
+              },
+              beginAtZero: false,
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 12,
+                sampleSize: 8,
+                major: { enabled: true },
+                callback(value) {
+                  return formatSeconds(Number(value), precision);
+                },
+              },
+              grid: {
+                display: false,
+              },
+            },
+          },
+        };
+      }
+
+      function makeChart(canvasId, category) {
+        const ctx = document.getElementById(canvasId).getContext("2d");
+        const labels = REPORT_DATA[category].labels;
+        const javaData = REPORT_DATA[category].java.map((v) =>
+          v === null ? null : Number(v) * 1000,
+        );
+        const nodeData = REPORT_DATA[category].node.map((v) =>
+          v === null ? null : Number(v) * 1000,
+        );
+        const cppData = REPORT_DATA[category].cpp.map((v) =>
+          v === null ? null : Number(v) * 1000,
+        );
+        const allValues = javaData
+          .concat(nodeData)
+          .concat(cppData)
+          .filter((v) => v !== null && Number.isFinite(v));
+
+        const maxValue = allValues.length ? Math.max(...allValues) : 1;
+        const minValue = allValues.length ? Math.min(...allValues) : 0.0001;
+
+        return new Chart(ctx, {
+          type: "bar",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Bouncy Castle (Java)",
+                data: javaData,
+                backgroundColor: COLORS.java,
+                borderColor: "rgba(31, 119, 180, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "Node Crypto (TypeScript)",
+                data: nodeData,
+                backgroundColor: COLORS.node,
+                borderColor: "rgba(255, 127, 14, 1)",
+                borderWidth: 1,
+              },
+              {
+                label: "OpenSSL (C++)",
+                data: cppData,
+                backgroundColor: "rgba(75, 192, 192, 0.85)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: (() => {
+            const opts = chartOptions(category, category);
+            // opts.scales.x.suggestedMin = Math.max(0.0001, minValue / 3);
+            opts.scales.x.ticks.callback = function (value) {
+              return formatSeconds(
+                Number(value),
+                category === "sha256" || category === "chacha20" ? 6 : 3,
+              );
+            };
+            return opts;
+          })(),
+          plugins: [ChartDataLabels],
+        });
+      }
+
+      function initializeCharts() {
+        Chart.register(ChartDataLabels);
+        makeChart("chart-sha256", "sha256");
+        makeChart("chart-chacha20", "chacha20");
+        makeChart("chart-rsa", "rsa");
+      }
+
+      // load the data only when the DOM is actually ready:
+      document.addEventListener("DOMContentLoaded", loadBenchmarkData);
+    </script>
+  </body>
+</html>

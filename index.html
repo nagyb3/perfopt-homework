@@ -1,545 +1,644 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Cryptography Library Benchmark</title>
-    <style>
-      :root {
-        --bg: #ffffff;
-        --fg: #1f2937;
-        --muted: #6b7280;
-        --border: #e5e7eb;
-        --panel: #f9fafb;
-      }
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font-family:
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Roboto,
-          Arial,
-          sans-serif;
-        line-height: 1.45;
-      }
-      .wrap {
-        max-width: 1150px;
-        margin: 0 auto;
-        padding: 24px;
-      }
-      header {
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border);
-      }
-      h1 {
-        margin: 0 0 8px;
-        font-size: 1.8rem;
-      }
-      .subtitle {
-        color: var(--muted);
-        margin: 0;
-      }
-      .note {
-        margin: 14px 0 0;
-        padding: 12px 14px;
-        background: var(--panel);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        color: var(--muted);
-      }
-      .runtime-note {
-        margin: 10px 0 0;
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
-      .chart-card {
-        margin: 22px 0 34px;
-        padding: 16px 16px 8px;
-        border: 1px solid var(--border);
-        border-radius: 14px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-      }
-      .chart-card h2 {
-        margin: 0 0 8px;
-        font-size: 1.15rem;
-      }
-      .chart-card p {
-        margin: 0 0 12px;
-        color: var(--muted);
-        font-size: 0.95rem;
-      }
-      .chart-container {
-        position: relative;
-        width: 100%;
-        height: 500px;
-      }
-      canvas {
-        display: block;
-      }
-      .mini strong {
-        display: block;
-        margin-bottom: 4px;
-      }
-      code {
-        font-family: monospace;
-        font-size: 14px;
-        font-weight: 600;
-      }
-    </style>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-  </head>
-  <body>
-    <div class="wrap">
-      <header>
-        <h1>Cryptography Library Benchmark</h1>
-        <p>Author: Bence Nagy</p>
-      </header>
-      <div>
-        <h2>Introduction</h2>
-        <p>
-          This benchmark aims to compare 3 well-know cryptographic libraries:
-          Bouncy Castle, Node's Crypto module and OpenSSL. The cryptographic
-          algorithms I have chosen to test using the given libraries were the
-          following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305.
-        </p>
-        <p></p>
-        <p>
-          The goal of this benchmark isn't to compare the algorithms to each
-          other (for example trying to decide of ChaCha20 or RSA can encrypt a
-          message faster), but rather comparing the libraries to each other and
-          seeing which library can achieve a faster runtime for the chosen
-          algorithms in the given programming language.
-        </p>
-      </div>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
 
-      <div>
-        <h2>Methodology</h2>
-        <p>
-          For the encryption algorithms (ChaCha20-Poly1305 and RSA) I both
-          measured the encryption and decryption speed of a message.
-        </p>
-        <p>
-          In the tests I have taken a few notable measures in order to achieve
-          more comparable results. The Java and TypeScript benchmarks were
-          preceded by 20 warmup iterations. However, in the Google Benchmark
-          framework I could find a warmup iteration parameter so I ended up
-          using a fixed 1 second long warmup period. During the benchmarks each
-          algorithm and library pair combination had its speed measured for 10
-          iterations. The below numbers in the graphs are the statictical mean
-          (average) values of those 10 iterations.
-        </p>
-        <p>
-          The benchmarks were configured to exclude unncessary overhead, such as
-          setup of the libraries, ensuring the measurements reflected only the
-          execution time of the core cryptographic functions.
-        </p>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-        <h3>Benchmarking frameworks</h3>
-        <p>
-          For testing the runtime of each algorithm I have used a third-party
-          benchmark library:
-        </p>
-        <ul>
-          <li>
-            <strong>TypeScript: </strong>
-            <a href="https://github.com/tinylibs/tinybench" target="_blank"
-              >tinybench</a
-            >
-          </li>
-          <li>
-            <strong>Java: </strong>
-            <a href="https://github.com/openjdk/jmh" target="_blank"
-              >Java Microbenchmark Harness</a
-            >
-          </li>
-          <li>
-            <strong>C++: </strong>
-            <a href="https://github.com/google/benchmark" target="_blank"
-              >Google BenchMark</a
-            >
-          </li>
-        </ul>
+<meta name="author" content="Bence Nagy">
 
-        <h3>Compilers and language versions:</h3>
-        <ul>
-          <li>
-            <strong>Typescript:</strong> The tests were ran on TypeScript
-            version 6.0.2 using tsx 4.21.0.
-          </li>
-          <li>
-            <strong>Java:</strong> The Java sources were compiled and ran with
-            Oracle OpenJDK 23.0.1.
-          </li>
-          <li>
-            <strong>C++: </strong>The C++ source codes were compiled with Clang
-            22.1.2 using <code>-O3</code> optimization. For building the project
-            I have setup a CMake project and used C++20.
-          </li>
-        </ul>
-      </div>
+<title>Cryptography Library Benchmark</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
 
-      <div>
-        <h3>Hardware</h3>
-        <p>The benchmarks were ran on a M3 Macbook Air.</p>
-      </div>
 
-      <h2>Results</h2>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="report_files/libs/quarto-html/popper.min.js"></script>
+<script src="report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="report_files/libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="report_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
-      <section class="chart-card">
-        <h2>SHA-256</h2>
-        <p>
-          SHA-256 is a cryptographic hash function from the SHA-2 family that
-          generates a unique, fixed-size 256-bit signature to ensure data
-          integrity and detect unauthorized modifications.
-        </p>
-        <div class="chart-container">
-          <canvas id="chart-sha256"></canvas>
-        </div>
-      </section>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script type="text/javascript">
+window.PlotlyConfig = {MathJaxConfig: 'local'};
+if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}
+</script>
+<script type="module">import "https://cdn.plot.ly/plotly-3.1.0.min"</script>
 
-      <section class="chart-card">
-        <h2>ChaCha20-Poly1305</h2>
-        <p>
-          ChaCha20-Poly1305 is a symmetric key streaming cypher. It uses the
-          Poly-1305 message authenication algorithm in order to generate a MAC
-          (Message Authenication Code) for the cypher texts so if an
-          eavesdropper were to change the encrypted message, it would be
-          detectable by the source.
-        </p>
-        <div class="chart-container">
-          <canvas id="chart-chacha20"></canvas>
-        </div>
-      </section>
 
-      <section class="chart-card">
-        <h2>RSA</h2>
-        <p>
-          RSA is an asymmetric cryptographic algorithm that relies on the
-          mathematical difficulty of factoring large prime numbers to provide
-          secure data encryption.
-        </p>
-        <div class="chart-container">
-          <canvas id="chart-rsa"></canvas>
-        </div>
-      </section>
 
-      <!-- <div>
-        <h2>Naive implementation of ChaCha20-Poly1305</h2>
-        TODO add graph and explination
-      </div> -->
+</head>
 
-      <h2 style="margin-top: 60px">Conclusion</h2>
-      <p>
-        In my measurements I have witnessed that OpenSSL managed to outperform
-        or atleast tie each library in every algorithm, as expeceted. However,
-        contirary to my expectation Node's crypto module manage to outperform
-        Java's Bouncy Castle library.
-      </p>
+<body class="fullcontent quarto-light">
 
-      <div style="margin-top: 60px">
-        <h2>Source code</h2>
-        <p>
-          The source code for all of benchmarks and this webpage can be found in
-          the following Github repository:
-          <a target="_blank" href="https://github.com/nagyb3/perfopt-homework"
-            >https://github.com/nagyb3/perfopt-homework</a
-          >
-        </p>
-        <p>
-          The charts on this website were made with
-          <a href="https://www.chartjs.org/" target="_blank">Chart.js</a>
-        </p>
-      </div>
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 
-      <div>
-        <h2>AI dislosure</h2>
-        <p>
-          During the creation of the benchmarks I have used Github Copilot for
-          speeding up the coding process but have manually reviewed every change
-          in order to make results accurate.
-        </p>
-      </div>
-    </div>
+<main class="content" id="quarto-document-content">
 
-    <script>
-      let REPORT_DATA = null;
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Cryptography Library Benchmark</h1>
+</div>
 
-      async function loadBenchmarkData() {
-        try {
-          const [javaData, sha256Data, chacha20Data, rsaData, cppData] =
-            await Promise.all([
-              fetch("./bouncycastle-benchmark/results.json").then((r) =>
-                r.json(),
-              ),
-              fetch("./node-benchmarks/results/sha256-report.json").then((r) =>
-                r.json(),
-              ),
-              fetch(
-                "./node-benchmarks/results/chacha20-benchmark-results.json",
-              ).then((r) => r.json()),
-              fetch(
-                "./node-benchmarks/results/rsa-benchmark-results.json",
-              ).then((r) => r.json()),
-              fetch("./openssl-cpp-benchmark/results.json").then((r) =>
-                r.json(),
-              ),
-              [],
-            ]);
 
-          const javaMap = {};
-          for (const entry of javaData) {
-            const parts = entry.benchmark.split(".");
-            const bench = parts[parts.length - 2];
-            const op = parts[parts.length - 1];
-            const scoreNs = entry.primaryMetric.score;
-            const category = bench.toLowerCase().includes("chacha")
-              ? "chacha20"
-              : bench.toLowerCase().includes("sha")
-                ? "sha256"
-                : bench.toLowerCase().includes("rsa")
-                  ? "rsa"
-                  : bench;
-            if (!javaMap[category]) javaMap[category] = {};
-            javaMap[category][op.toLowerCase()] = scoreNs / 1e9; // Convert ns/op to seconds
-          }
 
-          const nodeMap = {};
+<div class="quarto-title-meta">
 
-          if (sha256Data.tasks && sha256Data.tasks[0]) {
-            const latencyMs = sha256Data.tasks[0].latency.mean;
-            nodeMap["sha256"] = { sha256: latencyMs / 1000 };
-          }
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Bence Nagy </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
 
-          if (chacha20Data.tasks && chacha20Data.tasks.length >= 2) {
-            nodeMap["chacha20"] = {
-              encrypt: chacha20Data.tasks[0].latency.mean / 1000,
-              decrypt: chacha20Data.tasks[1].latency.mean / 1000,
-            };
-          }
 
-          if (rsaData.tasks && rsaData.tasks.length >= 2) {
-            nodeMap["rsa"] = {
-              encrypt: rsaData.tasks[0].latency.mean / 1000,
-              decrypt: rsaData.tasks[1].latency.mean / 1000,
-            };
-          }
+</header>
 
-          const cppMap = {};
 
-          for (const entry of cppData.benchmarks) {
-            if (
-              entry.run_type === "aggregate" &&
-              entry.aggregate_name === "mean"
-            ) {
-              const nameParts = entry.name.split("/");
-              const category = nameParts[0]
-                .replace("Benchmark", "")
-                .toLowerCase();
-              const op = nameParts[1].replace("_mean", "").toLowerCase();
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>This benchmark aims to compare 3 well-know cryptographic libraries: Bouncy Castle, Node’s Crypto module and OpenSSL. The cryptographic algorithms I have chosen to test using the given libraries were the following 3 famous algorithms: RSA, SHA-256 and ChaCha20-Poly1305.</p>
+<p>The goal of this benchmark isn’t to compare the algorithms to each other (for example trying to decide of ChaCha20 or RSA can encrypt a message faster), but rather comparing the libraries to each other and seeing which library can achieve a faster runtime for the chosen algorithms in the given programming language.</p>
+</section>
+<section id="methodology" class="level1">
+<h1>Methodology</h1>
+<p>For the encryption algorithms (ChaCha20-Poly1305 and RSA) I both measured the encryption and decryption speed of a message.</p>
+<p>In the tests I have taken a few notable measures in order to achieve more comparable results. The Java and TypeScript benchmarks were preceded by 20 warmup iterations. However, in the Google Benchmark framework I could find a warmup iteration parameter so I ended up using a fixed 1 second long warmup period. During the benchmarks each algorithm and library pair combination had its speed measured for 10 iterations. The below numbers in the graphs are the statictical mean (average) values of those 10 iterations.</p>
+<p>The benchmarks were configured to exclude unncessary overhead, such as setup of the libraries, ensuring the measurements reflected only the execution time of the core cryptographic functions.</p>
+<section id="benchmarking-frameworks" class="level2">
+<h2 class="anchored" data-anchor-id="benchmarking-frameworks">Benchmarking frameworks</h2>
+<p>For testing the runtime of each algorithm I have used a third-party benchmark library:</p>
+<ul>
+<li>TypeScript: <a href="https://github.com/tinylibs/tinybench">tinybench</a></li>
+<li>Java: <a href="https://github.com/openjdk/jmh">Java Microbenchmark Harness</a></li>
+<li>C++: <a href="https://github.com/google/benchmark">Google BenchMark</a></li>
+</ul>
+</section>
+<section id="compilers-and-language-versions" class="level2">
+<h2 class="anchored" data-anchor-id="compilers-and-language-versions">Compilers and language versions:</h2>
+<ul>
+<li>Typescript: The tests were ran on TypeScript version 6.0.2 using tsx 4.21.0.</li>
+<li>Java: The Java sources were compiled and ran with Oracle OpenJDK 23.0.1.</li>
+<li>C++: The C++ source codes were compiled with Clang 22.1.2 using <code>-O3</code> optimization. For building the project I have setup a CMake project and used C++20.</li>
+</ul>
+</section>
+<section id="hardware" class="level2">
+<h2 class="anchored" data-anchor-id="hardware">Hardware</h2>
+<p>The benchmarks were ran on a M3 Macbook Air.</p>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results:</h1>
+<section id="sha-256" class="level2">
+<h2 class="anchored" data-anchor-id="sha-256">SHA-256:</h2>
+<p>SHA-256 is a cryptographic hash function from the SHA-2 family that generates a unique, fixed-size 256-bit signature to ensure data integrity and detect unauthorized modifications.</p>
+<div id="9c27e7b5-57db-4796-adc4-2cd4c9f1e6aa" class="cell" data-jp-markdownheadingcollapsed="true" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="eb62f7a3-5057-45e9-9805-4d0f8bc2c20d" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("eb62f7a3-5057-45e9-9805-4d0f8bc2c20d")) {                    Plotly.newPlot(                        "eb62f7a3-5057-45e9-9805-4d0f8bc2c20d",                        [{"hovertemplate":"\u003cb\u003e%{y}\u003c\u002fb\u003e\u003cbr\u003eLatency: %{x:.6f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":["rgba(31, 119, 180, 0.85)","rgba(255, 127, 14, 0.85)","rgba(75, 192, 192, 0.85)"]},"orientation":"h","x":[0.004044336020473174,0.0008074376488712605,0.0005213312786833919],"y":["Bouncy Castle (Java)","Node Crypto (TypeScript)","OpenSSL (C++)"],"type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"type":"log","title":{"text":"milliseconds \u002f operation (lower is better)"}},"title":{"text":"SHA-256 Hashing Perfomance"},"autosize":true},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('eb62f7a3-5057-45e9-9805-4d0f8bc2c20d');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
 
-              if (!cppMap[category]) cppMap[category] = {};
-              cppMap[category][op] = entry.real_time / 1e9;
-            }
-          }
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
 
-          REPORT_DATA = {
-            sha256: {
-              labels: ["sha256"],
-              java: [javaMap.sha256?.sha256 || 0],
-              node: [nodeMap.sha256?.sha256 || 0],
-              cpp: [cppMap.sha256?.streaming || 0],
-            },
-            chacha20: {
-              labels: ["encrypt", "decrypt"],
-              java: [
-                javaMap.chacha20?.encrypt || 0,
-                javaMap.chacha20?.decrypt || 0,
-              ],
-              node: [
-                nodeMap.chacha20?.encrypt || 0,
-                nodeMap.chacha20?.decrypt || 0,
-              ],
-              cpp: [
-                cppMap.chacha20?.encrypt || 0,
-                cppMap.chacha20?.decrypt || 0,
-              ],
-            },
-            rsa: {
-              labels: ["encrypt", "decrypt"],
-              java: [javaMap.rsa?.encrypt || 0, javaMap.rsa?.decrypt || 0],
-              node: [nodeMap.rsa?.encrypt || 0, nodeMap.rsa?.decrypt || 0],
-              cpp: [cppMap.rsa?.encrypt || 0, cppMap.rsa?.decrypt || 0],
-            },
-          };
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
 
-          console.log("Benchmark data loaded:", REPORT_DATA);
-          initializeCharts();
-        } catch (error) {
-          console.error("Error loading benchmark data:", error);
-          const errorMsg = document.createElement("div");
-          errorMsg.style.cssText =
-            "padding: 12px; background: #fee; border: 1px solid #fcc; border-radius: 6px; margin: 12px 24px; color: #c00;";
-          errorMsg.innerHTML = `<strong>Error loading data:</strong> ${error.message}<br/>`;
-          document.body.insertBefore(errorMsg, document.body.firstChild);
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+</section>
+<section id="chacha20-poly1305" class="level1">
+<h1>ChaCha20-Poly1305</h1>
+<p>ChaCha20-Poly1305 is a symmetric key streaming cypher. It uses the Poly-1305 message authenication algorithm in order to generate a MAC (Message Authenication Code) for the cypher texts so if an eavesdropper were to change the encrypted message, it would be detectable by the source.</p>
+<div id="ab472ea6-f803-4316-86bd-2f21f0f3561f" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="fa7d9d57-986b-409e-ae8c-12b0d717e4d7" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("fa7d9d57-986b-409e-ae8c-12b0d717e4d7")) {                    Plotly.newPlot(                        "fa7d9d57-986b-409e-ae8c-12b0d717e4d7",                        [{"hovertemplate":"\u003cb\u003eJava\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.6f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(31, 119, 180, 0.85)"},"name":"Bouncy Castle (Java)","orientation":"h","x":[0.004842216788360203,0.0040836988071375376],"y":["Encrypt","Decrypt"],"type":"bar"},{"hovertemplate":"\u003cb\u003eNode\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.6f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(255, 127, 14, 0.85)"},"name":"Node Crypto (TypeScript)","orientation":"h","x":[0.0022985465156369947,0.002249020187163008],"y":["Encrypt","Decrypt"],"type":"bar"},{"hovertemplate":"\u003cb\u003eC++\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.6f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(75, 192, 192, 0.85)"},"name":"OpenSSL (C++)","orientation":"h","x":[0.0008912637004925382,0.0008916123458502003],"y":["Encrypt","Decrypt"],"type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"title":{"text":"milliseconds \u002f operation (lower is better)"},"type":"log"},"yaxis":{"title":{"text":"Operation"},"autorange":"reversed"},"title":{"text":"ChaCha20-Poly1305 Encryption and Decryption Perfomance"},"barmode":"group","legend":{"title":{"text":"Library"}},"autosize":true},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('fa7d9d57-986b-409e-ae8c-12b0d717e4d7');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="rsa" class="level1">
+<h1>RSA</h1>
+<p>RSA is an asymmetric cryptographic algorithm that relies on the mathematical difficulty of factoring large prime numbers to provide secure data encryption.</p>
+<div id="b7d3165c-a41a-4c6c-b82e-04eacf6717a4" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div>            <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG"></script><script type="text/javascript">if (window.MathJax && window.MathJax.Hub && window.MathJax.Hub.Config) {window.MathJax.Hub.Config({SVG: {font: "STIX-Web"}});}</script>                <script type="text/javascript">window.PlotlyConfig = {MathJaxConfig: 'local'};</script>
+        <script charset="utf-8" src="https://cdn.plot.ly/plotly-3.1.0.min.js" integrity="sha256-Ei4740bWZhaUTQuD6q9yQlgVCMPBz6CZWhevDYPv93A=" crossorigin="anonymous"></script>                <div id="fe4f1b54-c61c-41b2-9ea1-36d394b59324" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("fe4f1b54-c61c-41b2-9ea1-36d394b59324")) {                    Plotly.newPlot(                        "fe4f1b54-c61c-41b2-9ea1-36d394b59324",                        [{"hovertemplate":"\u003cb\u003eJava\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.4f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(31, 119, 180, 0.85)"},"name":"Bouncy Castle (Java)","orientation":"h","x":[0.03709270974008357,0.7501677005922005],"y":["Encrypt","Decrypt"],"type":"bar"},{"hovertemplate":"\u003cb\u003eNode\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.4f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(255, 127, 14, 0.85)"},"name":"Node Crypto (TypeScript)","orientation":"h","x":[0.014272318827962305,0.4192225666387264],"y":["Encrypt","Decrypt"],"type":"bar"},{"hovertemplate":"\u003cb\u003eC++\u003c\u002fb\u003e\u003cbr\u003e%{y}: %{x:.4f} ms\u003cextra\u003e\u003c\u002fextra\u003e","marker":{"color":"rgba(75, 192, 192, 0.85)"},"name":"OpenSSL (C++)","orientation":"h","x":[0.011979494798818416,0.43224856660224004],"y":["Encrypt","Decrypt"],"type":"bar"}],                        {"template":{"data":{"barpolar":[{"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"white","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"#C8D4E3","linecolor":"#C8D4E3","minorgridcolor":"#C8D4E3","startlinecolor":"#2a3f5f"},"type":"carpet"}],"choropleth":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"choropleth"}],"contourcarpet":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"contourcarpet"}],"contour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"contour"}],"heatmap":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"heatmap"}],"histogram2dcontour":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2dcontour"}],"histogram2d":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"histogram2d"}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"mesh3d":[{"colorbar":{"outlinewidth":0,"ticks":""},"type":"mesh3d"}],"parcoords":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"parcoords"}],"pie":[{"automargin":true,"type":"pie"}],"scatter3d":[{"line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatter3d"}],"scattercarpet":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattercarpet"}],"scattergeo":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergeo"}],"scattergl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattergl"}],"scattermapbox":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermapbox"}],"scattermap":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scattermap"}],"scatterpolargl":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolargl"}],"scatterpolar":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterpolar"}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"scatterternary":[{"marker":{"colorbar":{"outlinewidth":0,"ticks":""}},"type":"scatterternary"}],"surface":[{"colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"type":"surface"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}]},"layout":{"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"autotypenumbers":"strict","coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]],"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]},"colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"geo":{"bgcolor":"white","lakecolor":"white","landcolor":"white","showlakes":true,"showland":true,"subunitcolor":"#C8D4E3"},"hoverlabel":{"align":"left"},"hovermode":"closest","mapbox":{"style":"light"},"paper_bgcolor":"white","plot_bgcolor":"white","polar":{"angularaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""},"bgcolor":"white","radialaxis":{"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":""}},"scene":{"xaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"yaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"},"zaxis":{"backgroundcolor":"white","gridcolor":"#DFE8F3","gridwidth":2,"linecolor":"#EBF0F8","showbackground":true,"ticks":"","zerolinecolor":"#EBF0F8"}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"ternary":{"aaxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"baxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""},"bgcolor":"white","caxis":{"gridcolor":"#DFE8F3","linecolor":"#A2B1C6","ticks":""}},"title":{"x":0.05},"xaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2},"yaxis":{"automargin":true,"gridcolor":"#EBF0F8","linecolor":"#EBF0F8","ticks":"","title":{"standoff":15},"zerolinecolor":"#EBF0F8","zerolinewidth":2}}},"xaxis":{"title":{"text":"milliseconds \u002f operation"},"type":"log"},"yaxis":{"title":{"text":"Operation"},"autorange":"reversed"},"title":{"text":"RSA Performance by Operation (lower is better)"},"barmode":"group","legend":{"title":{"text":"Library"}},"autosize":true},                        {"responsive": true}                    ).then(function(){
+                            
+var gd = document.getElementById('fe4f1b54-c61c-41b2-9ea1-36d394b59324');
+var x = new MutationObserver(function (mutations, observer) {{
+        var display = window.getComputedStyle(gd).display;
+        if (!display || display === 'none') {{
+            console.log([gd, 'removed!']);
+            Plotly.purge(gd);
+            observer.disconnect();
+        }}
+}});
+
+// Listen for the removal of the full notebook cells
+var notebookContainer = gd.closest('#notebook-container');
+if (notebookContainer) {{
+    x.observe(notebookContainer, {childList: true});
+}}
+
+// Listen for the clearing of the current output cell
+var outputEl = gd.closest('.output');
+if (outputEl) {{
+    x.observe(outputEl, {childList: true});
+}}
+
+                        })                };            </script>        </div>
+</div>
+</div>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion:</h1>
+<p>In my measurements I have witnessed that OpenSSL managed to outperform or atleast tie each library in every algorithm, as expeceted. However, contirary to my expectation Node’s crypto module manage to outperform Java’s Bouncy Castle library.</p>
+<hr>
+</section>
+<section id="source-code" class="level1">
+<h1>Source code</h1>
+<p>The source code for all of benchmarks and this webpage can be found in the following Github repository: https://github.com/nagyb3/perfopt-homework</p>
+<p>The charts on this website were made with <a href="https://www.chartjs.org/">Chart.js</a>.</p>
+</section>
+<section id="ai-dislosure" class="level1">
+<h1>AI dislosure</h1>
+<p>During the creation of the benchmarks I have used Github Copilot for speeding up the coding process but have manually reviewed every change in order to make results accurate.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
         }
       }
-
-      const COLORS = {
-        java: "rgba(31, 119, 180, 0.85)",
-        node: "rgba(255, 127, 14, 0.85)",
-      };
-
-      function formatSeconds(value, precision) {
-        if (value === null || value === undefined || Number.isNaN(value))
-          return "N/A";
-        return `${value.toFixed(precision || 3)} ms`;
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
       }
-
-      function chartOptions(title, category) {
-        const precision =
-          category === "sha256" || category === "chacha20" ? 6 : 3;
-        return {
-          responsive: true,
-          maintainAspectRatio: false,
-          indexAxis: "y",
-          interaction: { mode: "nearest", axis: "y", intersect: false },
-          hover: { mode: "nearest", axis: "y", intersect: false },
-          layout: {
-            padding: { top: 16, right: 64, bottom: 16, left: 16 },
-          },
-          plugins: {
-            legend: { position: "top" },
-            title: { display: false, text: title },
-            tooltip: {
-              callbacks: {
-                label(context) {
-                  return `${context.dataset.label}: ${context.parsed.x.toFixed(precision)} ms`;
-                },
-              },
-            },
-            datalabels: {
-              anchor: "end",
-              align: "left",
-              offset: 6,
-              clamp: true,
-              clip: false,
-              color: "#111827",
-              font: { size: 11, weight: "700" },
-              formatter(value) {
-                return value === null || value === undefined
-                  ? ""
-                  : formatSeconds(Number(value), precision);
-              },
-            },
-          },
-          scales: {
-            y: {
-              grid: { display: false },
-              ticks: { font: { size: 12 } },
-            },
-            x: {
-              type: "logarithmic",
-              title: {
-                display: true,
-                text: "milliseconds / operation",
-              },
-              beginAtZero: false,
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 12,
-                sampleSize: 8,
-                major: { enabled: true },
-                callback(value) {
-                  return formatSeconds(Number(value), precision);
-                },
-              },
-              grid: {
-                display: false,
-              },
-            },
-          },
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
         };
       }
-
-      function makeChart(canvasId, category) {
-        const ctx = document.getElementById(canvasId).getContext("2d");
-        const labels = REPORT_DATA[category].labels;
-        const javaData = REPORT_DATA[category].java.map((v) =>
-          v === null ? null : Number(v) * 1000,
-        );
-        const nodeData = REPORT_DATA[category].node.map((v) =>
-          v === null ? null : Number(v) * 1000,
-        );
-        const cppData = REPORT_DATA[category].cpp.map((v) =>
-          v === null ? null : Number(v) * 1000,
-        );
-        const allValues = javaData
-          .concat(nodeData)
-          .concat(cppData)
-          .filter((v) => v !== null && Number.isFinite(v));
-
-        const maxValue = allValues.length ? Math.max(...allValues) : 1;
-        const minValue = allValues.length ? Math.min(...allValues) : 0.0001;
-
-        return new Chart(ctx, {
-          type: "bar",
-          data: {
-            labels,
-            datasets: [
-              {
-                label: "Bouncy Castle (Java)",
-                data: javaData,
-                backgroundColor: COLORS.java,
-                borderColor: "rgba(31, 119, 180, 1)",
-                borderWidth: 1,
-              },
-              {
-                label: "Node Crypto (TypeScript)",
-                data: nodeData,
-                backgroundColor: COLORS.node,
-                borderColor: "rgba(255, 127, 14, 1)",
-                borderWidth: 1,
-              },
-              {
-                label: "OpenSSL (C++)",
-                data: cppData,
-                backgroundColor: "rgba(75, 192, 192, 0.85)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: (() => {
-            const opts = chartOptions(category, category);
-            // opts.scales.x.suggestedMin = Math.max(0.0001, minValue / 3);
-            opts.scales.x.ticks.callback = function (value) {
-              return formatSeconds(
-                Number(value),
-                category === "sha256" || category === "chacha20" ? 6 : 3,
-              );
-            };
-            return opts;
-          })(),
-          plugins: [ChartDataLabels],
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
         });
       }
+    }
+  });
+  </script>
+</div> <!-- /content -->
 
-      function initializeCharts() {
-        Chart.register(ChartDataLabels);
-        makeChart("chart-sha256", "sha256");
-        makeChart("chart-chacha20", "chacha20");
-        makeChart("chart-rsa", "rsa");
-      }
 
-      // load the data only when the DOM is actually ready:
-      document.addEventListener("DOMContentLoaded", loadBenchmarkData);
-    </script>
-  </body>
-</html>
+
+
+</body></html>
