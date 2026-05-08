@@ -67,7 +67,7 @@ BENCHMARK_DEFINE_F(SHA256Benchmark, Streaming)(benchmark::State& state) {
         return;
     }
 
-    for ([[maybe_unused]] auto _ : state) {
+    for (auto _ : state) {
         if (EVP_DigestInit_ex(ctx, EVP_sha256(), nullptr) != 1) {
             state.SkipWithError("EVP_DigestInit_ex failed");
             break;

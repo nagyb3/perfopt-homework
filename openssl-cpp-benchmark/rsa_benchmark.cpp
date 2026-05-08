@@ -168,7 +168,7 @@ BENCHMARK_DEFINE_F(RSABenchmark, Encrypt)(benchmark::State& state) {
 	std::vector<unsigned char> outbuf(EVP_PKEY_size(pkey_));
 	size_t outlen = outbuf.size();
 
-	for ([[maybe_unused]] auto _ : state) {
+	for (auto _ : state) {
 		outlen = outbuf.size();
 		if (EVP_PKEY_encrypt(encrypt_ctx_, outbuf.data(), &outlen, plaintext_.data(), plaintext_.size()) <= 0) {
 			state.SkipWithError("EVP_PKEY_encrypt failed in benchmark");
@@ -185,7 +185,7 @@ BENCHMARK_DEFINE_F(RSABenchmark, Decrypt)(benchmark::State& state) {
 	std::vector<unsigned char> outbuf(EVP_PKEY_size(pkey_));
 	size_t outlen = outbuf.size();
 
-	for ([[maybe_unused]] auto _ : state) {
+	for (auto _ : state) {
 		outlen = outbuf.size();
 		if (EVP_PKEY_decrypt(decrypt_ctx_, outbuf.data(), &outlen, ciphertext_.data(), ciphertext_.size()) <= 0) {
 			state.SkipWithError("EVP_PKEY_decrypt failed in benchmark");

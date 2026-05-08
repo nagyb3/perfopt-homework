@@ -30,9 +30,7 @@ bool ProcessEncrypt(const std::array<unsigned char, KEY_SIZE>& key,
 					const std::array<unsigned char, DATA_SIZE>& plaintext_input,
 					std::array<unsigned char, DATA_SIZE>& output,
 					std::array<unsigned char, TAG_SIZE>& tag) {
-	auto sealed = chacha20_poly1305::seal(key, iv, plaintext_input);
-	output = sealed.ciphertext;
-	tag = sealed.tag;
+	chacha20_poly1305::seal(key, iv, plaintext_input, output, tag);
 
 	return true;
 }
@@ -42,9 +40,7 @@ bool ProcessDecrypt(const std::array<unsigned char, KEY_SIZE>& key,
 					const std::array<unsigned char, DATA_SIZE>& input,
 					std::array<unsigned char, DATA_SIZE>& output,
 					const std::array<unsigned char, TAG_SIZE>& tag) {
-	output = chacha20_poly1305::open(key, iv, input);
-
-	return true;
+	return chacha20_poly1305::open(key, iv, input, output, tag);
 }
 
 class ChaCha20Benchmark : public benchmark::Fixture {
@@ -63,7 +59,12 @@ protected:
 
 		std::memcpy(iv_.data(), nonce_.data(), NONCE_SIZE);
 
-		std::array<unsigned char, DATA_SIZE> round_trip{}; // ??
+		ProcessEncrypt(key_, iv_, plaintext_, ciphertext_, tag_);
+
+		std::array<unsigned char, DATA_SIZE> verify_buf{};
+		if (!ProcessDecrypt(key_, iv_, ciphertext_, verify_buf, tag_)) {
+			throw std::runtime_error("Setup failed: Implementation cannot decrypt its own output.");
+		}
 	}
 };
 

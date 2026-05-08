@@ -3,8 +3,6 @@
 #include <array>
 #include <cstring>
 #include <span>
-#include <stdexcept>
-#include <vector>
 
 namespace chacha20_poly1305 {
 
@@ -277,35 +275,32 @@ inline bool ct_equal_16(const uint8_t* a, const uint8_t* b) noexcept {
 
 } // namespace detail
 
-// public api:
-struct SealResult {
-    std::vector<uint8_t>     ciphertext;
-    std::array<uint8_t, 16>  tag;
-};
-
 // Encrypt plaintext and produce an authentication tag.
 // aad: additional authenticated data
-inline SealResult seal(const std::array<uint8_t, 32>& key,
-                       const std::array<uint8_t, 12>& nonce,
-                       std::span<const uint8_t>        plaintext,
-                       std::span<const uint8_t>        aad = {}) {
+inline void seal(const std::array<uint8_t, 32>& key,
+                const std::array<uint8_t, 12>& nonce,
+                std::span<const uint8_t> plaintext,
+                std::span<uint8_t> out_ciphertext,
+                std::span<uint8_t> out_tag,
+                std::span<const uint8_t> aad = {}) {
     // Step 1: Generate Poly1305 one-time key (block 0)
     uint8_t otk[64]{};
     uint32_t state[16];
     detail::chacha20_init(state, key.data(), nonce.data(), 0);
     detail::chacha20_block(state, otk);
 
-    // Step 2: Encrypt plaintext (counter starts at 1)
-    SealResult result;
-    result.ciphertext.assign(plaintext.begin(), plaintext.end());
+    // Step 2: Copy and Encrypt in-place
+    // We copy plaintext to output buffer first, then XOR it.
+    std::copy(plaintext.begin(), plaintext.end(), out_ciphertext.begin());
     detail::chacha20_xor(key.data(), nonce.data(), 1,
-                         result.ciphertext.data(), result.ciphertext.size());
+                         out_ciphertext.data(), out_ciphertext.size());
 
     // Step 3: Compute Poly1305 tag
-    result.tag = detail::poly1305_mac(otk, aad, result.ciphertext);
+    auto tag = detail::poly1305_mac(otk, aad, out_ciphertext);
+    std::copy(tag.begin(), tag.end(), out_tag.begin());
 
     std::memset(otk, 0, sizeof(otk));
-    return result;
+    std::memset(state, 0, sizeof(state));
 }
 
 /**
@@ -319,11 +314,12 @@ inline SealResult seal(const std::array<uint8_t, 32>& key,
  * @return           Decrypted plaintext
  * @throws           std::runtime_error if authentication fails
  */
-inline std::vector<uint8_t> open(const std::array<uint8_t, 32>& key,
-                                 const std::array<uint8_t, 12>& nonce,
-                                 std::span<const uint8_t> ciphertext,
-                                 const std::array<uint8_t, 16>& tag,
-                                 std::span<const uint8_t> aad = {}) {
+inline bool open(const std::array<uint8_t, 32>& key,
+                const std::array<uint8_t, 12>& nonce,
+                std::span<const uint8_t> ciphertext,
+                std::span<uint8_t> out_plaintext,
+                const std::array<uint8_t, 16>& tag,
+                std::span<const uint8_t> aad = {}) {
     // Step 1: Generate Poly1305 one-time key
     uint8_t otk[64]{};
     uint32_t state[16];
@@ -335,13 +331,15 @@ inline std::vector<uint8_t> open(const std::array<uint8_t, 32>& key,
     std::memset(otk, 0, sizeof(otk));
 
     if (!detail::ct_equal_16(expected_tag.data(), tag.data()))
-        throw std::runtime_error("chacha20_poly1305: authentication failed");
+        return false;
 
     // Step 3: Decrypt
-    std::vector<uint8_t> plaintext(ciphertext.begin(), ciphertext.end());
+    std::copy(ciphertext.begin(), ciphertext.end(), out_plaintext.begin());
     detail::chacha20_xor(key.data(), nonce.data(), 1,
-                         plaintext.data(), plaintext.size());
-    return plaintext;
+                         out_plaintext.data(), out_plaintext.size());
+
+    std::memset(state, 0, sizeof(state));
+    return true;
 }
 
 } // namespace chacha20_poly1305
