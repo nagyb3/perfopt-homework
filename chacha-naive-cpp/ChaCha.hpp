@@ -275,8 +275,7 @@ inline bool ct_equal_16(const uint8_t* a, const uint8_t* b) noexcept {
 
 } // namespace detail
 
-// Encrypt plaintext and produce an authentication tag.
-// aad: additional authenticated data
+// Encrypt plaintext and produce an authentication tag (aad = additional authenticated data)
 inline void seal(const std::array<uint8_t, 32>& key,
                 const std::array<uint8_t, 12>& nonce,
                 std::span<const uint8_t> plaintext,
@@ -303,17 +302,7 @@ inline void seal(const std::array<uint8_t, 32>& key,
     std::memset(state, 0, sizeof(state));
 }
 
-/**
- * Decrypt and verify ciphertext.
- *
- * @param key        32-byte secret key
- * @param nonce      12-byte nonce
- * @param ciphertext Encrypted message
- * @param tag        16-byte authentication tag from seal()
- * @param aad        Additional authenticated data (must match seal())
- * @return           Decrypted plaintext
- * @throws           std::runtime_error if authentication fails
- */
+// decryption:
 inline bool open(const std::array<uint8_t, 32>& key,
                 const std::array<uint8_t, 12>& nonce,
                 std::span<const uint8_t> ciphertext,
