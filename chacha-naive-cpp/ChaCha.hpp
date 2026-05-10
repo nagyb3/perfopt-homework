@@ -42,7 +42,7 @@ namespace chacha20_poly1305 {
             return (v << n) | (v >> (32 - n));
         }
 
-        // Produce one 64-byte ChaCha20 block into `out[64]`.
+        // Produce one 64-byte ChaCha20 block into out[64].
         inline void chacha20_block(const uint32_t state[16], uint8_t out[64]) noexcept {
             uint32_t x[16];
             std::memcpy(x, state, 64);
@@ -111,7 +111,7 @@ namespace chacha20_poly1305 {
             std::memset(block, 0, sizeof(block));
         }
 
-        // Poly1305 state uses 130-bit accumulator stored in five 26-bit limbs.
+        // Poly1305 state uses a 130-bit accumulator stored in five 26-bit limbs.
         struct Poly1305 {
             uint32_t h[5]{0};
             uint32_t r[5]{0};

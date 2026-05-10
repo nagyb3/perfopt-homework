@@ -12,8 +12,8 @@ endif()
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 add_executable(chacha_naive_cpp
-#        chacha_benchmark.cpp
-    test_main.cpp
+    chacha_benchmark.cpp
+#    test_main.cpp
 )
 
 target_link_libraries(chacha_naive_cpp benchmark::benchmark)
